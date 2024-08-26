@@ -1,0 +1,156 @@
+@import "../../layout";
+
+.leftNav {
+  width: $nav_width;
+  .inner {
+    position: sticky;
+    top: $header_height;
+    left: 0;
+    max-height: calc(100vh - $header_height);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    @include hideScrollBar;
+  }
+}
+
+.wrapTimeline,
+.wrapOutline {
+  max-height: 80vh;
+  overflow-y: scroll;
+  @include hideScrollBar;
+}
+
+.ulOutline {
+  margin: 0;
+  padding: 0;
+  ul {
+    margin: 0;
+    padding: 0 0 0 0.5rem;
+    list-style-type: none;
+    li {
+      height: 0;
+      overflow: hidden;
+    }
+  }
+}
+
+.liItem {
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
+  user-select: none;
+
+  > label {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    white-space: nowrap;
+
+    span {
+      &.type {
+        padding: 0 0.3em;
+        margin-right: 0.2em;
+        font-size: 0.8em;
+        border-radius: 0.2em;
+        color: #555;
+
+        &.block {
+          background: $block_col;
+        }
+        &.inline {
+          background: $inline_col;
+        }
+        &.etc {
+          background: $border_col;
+        }
+      }
+
+      &.txt {
+        cursor: pointer;
+      }
+    }
+
+    &.active {
+      span {
+        &.type {
+          font-weight: bold;
+          color: black;
+        }
+        &.txt {
+          font-weight: bold;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  &.hasChild {
+    > label {
+      span {
+        &.type {
+          cursor: pointer;
+          &::before {
+            content: "+";
+          }
+        }
+      }
+    }
+
+    &.open {
+      > label {
+        span {
+          &.type {
+            &::before {
+              content: "-";
+            }
+          }
+        }
+      }
+    }
+
+    &.open {
+      > ul {
+        > li {
+          height: unset !important;
+        }
+      }
+    }
+  }
+}
+
+.history {
+  display: flex;
+  button {
+    user-select: none;
+    cursor: pointer;
+  }
+}
+
+.recordList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  li {
+    padding: 0 $default_space;
+    margin-bottom: 0.1em;
+    user-select: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+  }
+
+  &.forward {
+    margin-bottom: $default_large_space;
+    li {
+      background: gainsboro;
+    }
+  }
+
+  &.back {
+    li {
+      background: bisque;
+    }
+  }
+}

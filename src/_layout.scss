@@ -1,0 +1,21 @@
+$header_height: 30px;
+$nav_width: 200px;
+$aside_width: 200px;
+
+$border_col: lightgray;
+
+$inline_col: magenta;
+$block_col: cyan;
+
+$default_space: 3px;
+$default_large_space: 10px;
+
+$boxShadow: 2px 3px 5px gray;
+
+@mixin hideScrollBar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

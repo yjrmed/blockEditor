@@ -18,20 +18,29 @@ export const EditorContext = createContext<controller.EditController>(
 function App() {
   const editor = useContext(EditorContext);
   const filer = useContext(FilerContext);
+  const [post, setPost] = useState();
   const [article, setArticle] = useState<controller.IPostItem | null>(null);
-  const wrapLayer = useRef<HTMLDivElement>(null);
-  const layer = useRef<HTMLDivElement>(null);
+
+  const wrapLayer = useRef(null);
+  const layer = useRef(null);
 
   useEffect(() => {
     new appEvents.AppKeyEvent(editor);
+    async function loadPosts() {
+      const response = await fetch("test.data");
+      if (!response.ok) {
+        return;
+      }
+      const post = await response.json();
+      setPost(post);
+    }
+    loadPosts();
   }, []);
 
   useEffect(() => {
-    if (layer.current && article) {
-      layer.current.appendChild(article.article);
-      if (article) {
-        editor.Initialization(layer.current);
-      }
+    const article = document.querySelector("article");
+    if (article) {
+      editor.Initialization(article);
     }
   });
 
@@ -43,10 +52,21 @@ function App() {
         </FilerContext.Provider>
         <div className={styles.containerFlex}>
           <Nav />
-          <div ref={wrapLayer} className={styles.containerEdit}>
-            <div ref={layer}></div>
-            <PopEditorWrap RelativeWrap={wrapLayer} />
-          </div>
+          {post && (
+            <div ref={wrapLayer} className={styles.containerEdit}>
+              <article ref={layer}>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: post["title"]["rendered"],
+                  }}></div>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: post["content"]["rendered"],
+                  }}></div>
+              </article>
+              <PopEditorWrap RelativeWrap={wrapLayer} />
+            </div>
+          )}
           <Aside />
         </div>
       </EditorContext.Provider>

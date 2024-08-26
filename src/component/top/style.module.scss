@@ -1,0 +1,65 @@
+@import "../../layout";
+
+header {
+  width: 100%;
+  z-index: 1;
+  height: $header_height;
+
+  button {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .inner {
+    position: fixed;
+    width: 100% !important;
+    height: $header_height;
+
+    top: 0;
+    z-index: 1;
+    background: white;
+    border-bottom: solid 1px $border_col;
+
+    display: flex;
+    align-items: stretch;
+  }
+}
+
+.history {
+  display: flex;
+  align-items: stretch;
+}
+
+.dropButton {
+  height: 100%;
+}
+
+.formStyleSheet {
+  background: rgba($color: white, $alpha: 0.8);
+  box-shadow: $boxShadow;
+  padding: $default_large_space;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    list-style-type: none;
+
+    li {
+      white-space: nowrap;
+      input {
+        vertical-align: middle;
+
+        cursor: pointer;
+      }
+      label {
+        cursor: pointer;
+      }
+
+      > *:not(:last-child) {
+        margin-right: $default_space;
+      }
+    }
+  }
+}

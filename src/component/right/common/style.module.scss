@@ -1,0 +1,54 @@
+.attrForm {
+  .wrapItem {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+
+    input {
+      width: 45%;
+    }
+  }
+}
+
+.formAttrs,
+.formStyle {
+  .wi {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    gap: 2px;
+
+    input {
+      width: 50%;
+    }
+  }
+}
+
+.formClass {
+  .labels {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 2px;
+    label {
+      border-radius: 0.3em;
+      padding: 0 0.3em;
+      word-break: break-all;
+      border: solid 1px lightgray;
+
+      button {
+        background: none;
+        border: none;
+        vertical-align: bottom;
+        cursor: pointer;
+      }
+    }
+  }
+  .new {
+    padding: 2px;
+    display: flex;
+    input[type="text"] {
+      width: 100%;
+    }
+  }
+}

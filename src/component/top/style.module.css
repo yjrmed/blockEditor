@@ -1,0 +1,20 @@
+header {
+  width: 100%;
+  z-index: 1;
+  height: 30px;
+}
+header .inner {
+  position: fixed;
+  width: 100% !important;
+  height: 30px;
+  top: 0;
+  z-index: 1;
+  background: white;
+  border-bottom: solid 1px lightgray;
+  display: flex;
+}
+
+.history {
+  display: flex;
+  align-items: center;
+}/*# sourceMappingURL=style.module.css.map */
