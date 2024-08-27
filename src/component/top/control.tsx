@@ -16,7 +16,7 @@ export const Header = (props: ISetter) => {
     // サーバー側で取りにいかないと cors エラー
     const path = prompt(
       "path to post",
-      "http://localhost:3000/testHtml/test2.html"
+      "http://localhost:3000/testHtml/e420.html"
     )?.trim();
     if (path) {
       filer.ImportDoc(path, (post: controller.IPostItem | null) => {
@@ -44,6 +44,11 @@ export const Header = (props: ISetter) => {
             <FormStyleSheet />
           </DropDown.Body>
         </DropDown>
+
+        <div className={styles.title}>
+          {filer.Post && <h1>{filer.Post.title}</h1>}
+        </div>
+
         <button onClick={exportLayer}>Export</button>
       </div>
     </header>

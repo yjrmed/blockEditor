@@ -202,7 +202,7 @@ export namespace controller {
           );
           this._post =
             article instanceof HTMLElement
-              ? { title: doc.head.title, article: article }
+              ? { title: doc.title, article: article }
               : null;
           callback(this._post);
         });
@@ -218,6 +218,20 @@ export namespace controller {
       link.dataset.wcms = `editor_css_${utilis.GenRandomString()}`;
       link.href = path;
       ele.appendChild(link);
+
+      // if (link.sheet) {
+      //   // cors の関係で cssRules にはアクセスできない。
+      // 　サーバー側に要求する際 scope を送って編集して送ってもらう。
+      //   // サーバー側で変更するしかない。
+      //   const scopedRules = Array.from(link.sheet.cssRules)
+      //     .map((rule) => {
+      //       return `@scope (article) { ${rule.cssText} }`;
+      //     })
+      //     .join(" ");
+
+      //   const styleElement = document.createElement("style");
+      //   styleElement.textContent = scopedRules;
+      // }
     };
 
     public GetCurrentStyles(): { href: string; disabled: boolean }[] {

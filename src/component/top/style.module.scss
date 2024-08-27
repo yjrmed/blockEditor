@@ -23,6 +23,16 @@ header {
 
     display: flex;
     align-items: stretch;
+
+    .title {
+      width: 100%;
+      text-align: center;
+
+      h1 {
+        font-size: 1em;
+        margin: 0;
+      }
+    }
   }
 }
 

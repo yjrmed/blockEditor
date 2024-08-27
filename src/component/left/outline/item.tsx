@@ -88,7 +88,7 @@ export const OutlineItem = (props: IOutlineItem) => {
           onClick={(e) => {
             editor.SetSelect(props.child.ele as HTMLElement, true);
           }}>
-          {props.child.ele.textContent
+          {(props.child.ele.textContent?.trim())
             ? props.child.ele.textContent.substring(0, 20)
             : "______"}
         </span>

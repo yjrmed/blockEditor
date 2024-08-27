@@ -53,6 +53,7 @@ export namespace appEvents {
             this.editor.SetSelect(tar, true, this.editor.IsEditting);
           }
         } else if (e.key === "Enter") {
+          debugger;
           if (
             this.editor.IsEditting &&
             this.editor.Block &&

@@ -1,7 +1,11 @@
+@import "./layout";
+
 .App {
+
 }
 
 .containerFlex {
+  min-height: calc(100vh - $header_height);
   display: flex;
 
   .containerEdit {

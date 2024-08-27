@@ -24,7 +24,7 @@ function App() {
 
   useEffect(() => {
     new appEvents.AppKeyEvent(editor);
-  }, []);
+  }, [article]);
 
   useEffect(() => {
     if (layer.current && article) {
