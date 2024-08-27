@@ -36,9 +36,11 @@ export namespace controller {
       return this.editor.IsEditting;
     }
 
-    private editor: contentEdit.Editor = new contentEdit.Editor();
-
     private saver: saver.Saver = new saver.Saver();
+
+    private editor: contentEdit.Editor = new contentEdit.Editor(
+      this.saver.MuteCommand.bind(this.saver)
+    );
 
     private selector: sele.Selector = new sele.Selector();
 

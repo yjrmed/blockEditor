@@ -2,9 +2,11 @@ import { fromEvent, Subscription, map } from "rxjs";
 
 export namespace contentEdit {
   export class Editor {
+    constructor(private muteCommand: Function) {}
 
     private sbscReady: Subscription | null = null;
     private sbscKeys: Subscription | null = null;
+    private endSpaceNode: Node = document.createTextNode("\u200B");
 
     private target: HTMLElement | null = null;
     get Target(): HTMLElement | null {
@@ -47,6 +49,7 @@ export namespace contentEdit {
         this.sbscKeys.add(
           fromEvent(this.target, "keydown").subscribe((e) => {
             const ke = e as KeyboardEvent;
+
             if (!ke.ctrlKey) {
               if (ke.key === "Enter") {
                 ke.preventDefault();
@@ -57,6 +60,13 @@ export namespace contentEdit {
                   range.deleteContents();
                   const br = document.createElement("br");
                   range.insertNode(br);
+
+                  if (br.nextSibling === this.target?.lastChild) {
+                    this.muteCommand(() => {
+                      br.after(this.endSpaceNode);
+                    });
+                  }
+
                   const newRange = document.createRange();
                   newRange.setStartAfter(br);
                   newRange.setEndAfter(br);
@@ -73,7 +83,11 @@ export namespace contentEdit {
           })
         );
 
-        this.target.setAttribute("contenteditable", "true");
+        const tar = this.target;
+        this.muteCommand(() => {
+          tar.setAttribute("contenteditable", "true");
+        });
+
         this.target.focus();
       }
     }
@@ -83,7 +97,11 @@ export namespace contentEdit {
       this.sbscReady?.unsubscribe();
 
       if (this.target) {
-        this.target.removeAttribute("contenteditable");
+        const tar = this.target;
+        this.muteCommand(() => {
+          tar.removeAttribute("contenteditable");
+          this.endSpaceNode.parentElement?.removeChild(this.endSpaceNode);
+        });
         this.target = null;
       }
     }

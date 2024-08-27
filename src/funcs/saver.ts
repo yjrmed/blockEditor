@@ -26,14 +26,7 @@ export namespace saver {
     private forward: CommandRecord[] = [];
     private observer: MutationObserver = new MutationObserver(
       (ml, observer) => {
-        if (
-          ml.length === 1 &&
-          ml[0].type === "attributes" &&
-          ml[0].attributeName === "contenteditable"
-        ) {
-          return;
-        }
-        console.log(ml);
+        // console.log(ml);
         this.back.push({ id: utilis.GenRandomString(), mrs: ml });
         this.forward.length = 0;
         this.$ObserverSubject.next(ml);

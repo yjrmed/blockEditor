@@ -3,7 +3,6 @@ import { controller } from "./controller";
 import { domFuncs } from "./htmlDoms";
 
 export namespace appEvents {
-
   export class AppKeyEvent {
     constructor(private editor: controller.EditController) {
       window.removeEventListener("keydown", this.handleKeyDown);
@@ -11,6 +10,8 @@ export namespace appEvents {
     }
 
     private handleKeyDown = (e: KeyboardEvent): void => {
+      // console.log(e);
+
       if (e.ctrlKey) {
         if (e.key === "ArrowUp") {
           e.stopPropagation();
@@ -53,31 +54,12 @@ export namespace appEvents {
             this.editor.SetSelect(tar, true, this.editor.IsEditting);
           }
         } else if (e.key === "Enter") {
-          debugger;
-          if (
-            this.editor.IsEditting &&
-            this.editor.Block &&
-            this.editor.Block.ele.parentElement
-          ) {
+          if (this.editor.IsEditting && this.editor.Block) {
             e.preventDefault();
             e.stopPropagation();
             const clone = domFuncs.SafeCloenEle(this.editor.Block.ele);
-
-            //////
-            // これを実施すると、次移行、２回の Enter 入力必要になってしまう。????
-            // edit を終了して、clone??
-            // clone.textContent = "";
-            //////
-
-            // const insert = new cmd.InsertBeforeCommand(
-            //   clone,
-            //   this.editor.Block.ele.parentElement,
-            //   this.editor.Block.ele.nextElementSibling
-            // );
-            // this.editor.ExecCmd(insert);
-            // this.editor.$UpdateElement.next(
-            //   this.editor.Block.ele.parentElement as HTMLElement
-            // );
+            clone.textContent = "";
+            this.editor.Block.ele.after(clone);
             this.editor.SetSelect(clone, true, true);
           } else {
             if (this.editor.Block) {
@@ -104,8 +86,6 @@ export namespace appEvents {
                 inline: false,
               });
 
-
-
               // const deleteCmd = new cmd.DeleteElement(this.editor.Block.ele);
               // this.editor.ExecCmd(deleteCmd);
               if (tar?.parentElement) {
@@ -117,6 +97,4 @@ export namespace appEvents {
       }
     };
   }
-
-
 }

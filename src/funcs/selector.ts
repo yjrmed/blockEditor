@@ -52,6 +52,12 @@ export namespace sele {
       this.$SelectChange = fromEvent(document, "selectionchange").pipe(
         switchMap(async (event) => {
           const rslt = this.parseSelection();
+
+          // パースした際に BR など編集不可の要素は選択させない。
+
+
+
+
           if (rslt && rslt.block?.ele) {
             return {
               block: rslt.block,
