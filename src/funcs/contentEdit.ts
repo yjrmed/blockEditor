@@ -2,11 +2,14 @@ import { fromEvent, Subscription, map } from "rxjs";
 
 export namespace contentEdit {
   export class Editor {
-    constructor(private muteCommand: Function) {}
+    constructor(private muteCommand: Function) {
+      this.endBreakLineSpace.textContent = "\u200B";
+      this.endBreakLineSpace.setAttribute("contenteditable", "false");
+    }
 
     private sbscReady: Subscription | null = null;
     private sbscKeys: Subscription | null = null;
-    private endSpaceNode: Node = document.createTextNode("\u200B");
+    private endBreakLineSpace: HTMLSpanElement = document.createElement("span");
 
     private target: HTMLElement | null = null;
     get Target(): HTMLElement | null {
@@ -45,11 +48,11 @@ export namespace contentEdit {
       this.sbscReady?.unsubscribe();
       if (this.target) {
         this.sbscKeys?.unsubscribe();
+        this.target?.lastChild?.after(this.endBreakLineSpace);
         this.sbscKeys = new Subscription();
         this.sbscKeys.add(
           fromEvent(this.target, "keydown").subscribe((e) => {
             const ke = e as KeyboardEvent;
-
             if (!ke.ctrlKey) {
               if (ke.key === "Enter") {
                 ke.preventDefault();
@@ -61,15 +64,18 @@ export namespace contentEdit {
                   const br = document.createElement("br");
                   range.insertNode(br);
 
-                  if (br.nextSibling === this.target?.lastChild) {
-                    this.muteCommand(() => {
-                      br.after(this.endSpaceNode);
-                    });
-                  }
+                  this.muteCommand(() => {
+                    this.target?.lastChild?.after(this.endBreakLineSpace);
+                  });
 
                   const newRange = document.createRange();
-                  newRange.setStartAfter(br);
-                  newRange.setEndAfter(br);
+                  if (br.nextElementSibling === this.endBreakLineSpace) {
+                    newRange.setStartAfter(this.endBreakLineSpace);
+                    newRange.setEndAfter(this.endBreakLineSpace);
+                  } else {
+                    newRange.setStartAfter(br);
+                    newRange.setEndAfter(br);
+                  }
                   selection.removeAllRanges();
                   selection.addRange(newRange);
                 }
@@ -78,13 +84,12 @@ export namespace contentEdit {
           })
         );
         this.sbscKeys.add(
-          fromEvent(this.target, "keyup").subscribe((e) => {
-            const ke = e as KeyboardEvent;
-          })
+          fromEvent(this.target, "keydown").subscribe((e) => {})
         );
 
         const tar = this.target;
         this.muteCommand(() => {
+          tar.lastChild?.after(this.endBreakLineSpace);
           tar.setAttribute("contenteditable", "true");
         });
 
@@ -100,7 +105,9 @@ export namespace contentEdit {
         const tar = this.target;
         this.muteCommand(() => {
           tar.removeAttribute("contenteditable");
-          this.endSpaceNode.parentElement?.removeChild(this.endSpaceNode);
+          this.endBreakLineSpace.parentElement?.removeChild(
+            this.endBreakLineSpace
+          );
         });
         this.target = null;
       }

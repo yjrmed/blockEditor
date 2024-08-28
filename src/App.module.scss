@@ -1,7 +1,6 @@
 @import "./layout";
 
 .App {
-
 }
 
 .containerFlex {
@@ -20,6 +19,11 @@
       // border-bottom: dashed 1px orangered;
       background-color: whitesmoke;
       min-height: 1em;
+
+      // &::after {
+      //   content: "<--end";
+      //   display: block;
+      // }
     }
 
     article {
