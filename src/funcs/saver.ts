@@ -24,12 +24,30 @@ export namespace saver {
 
     private back: CommandRecord[] = [];
     private forward: CommandRecord[] = [];
+
+    private _charge: boolean = false;
+    private chargeMRs: MutationRecord[][] = [];
+    get Charge(): boolean {
+      return this._charge;
+    }
+    set Charge(val: boolean) {
+      this._charge = val;
+      if (!val && this.chargeMRs.length) {
+        const merged = this.chargeMRs.reduce((accumulator, currentArray) => {
+          return accumulator.concat(currentArray);
+        }, []);
+        this.stackBack(merged);
+        this.chargeMRs = [];
+      }
+    }
+
     private observer: MutationObserver = new MutationObserver(
       (ml, observer) => {
-        // console.log(ml);
-        this.back.push({ id: utilis.GenRandomString(), mrs: ml });
-        this.forward.length = 0;
-        this.$ObserverSubject.next(ml);
+        if (!this._charge) {
+          this.stackBack(ml);
+        } else {
+          this.chargeMRs.push(ml);
+        }
       }
     );
 
@@ -39,6 +57,12 @@ export namespace saver {
       forward: CommandRecord[];
     } {
       return { back: this.back, forward: this.forward };
+    }
+
+    private stackBack(ml: MutationRecord[]) {
+      this.back.push({ id: utilis.GenRandomString(), mrs: ml });
+      this.forward.length = 0;
+      this.$ObserverSubject.next(ml);
     }
 
     public Command(command: Function, _description?: string): boolean {

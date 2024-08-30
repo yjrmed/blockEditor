@@ -38,9 +38,7 @@ export namespace controller {
 
     private saver: saver.Saver = new saver.Saver();
 
-    private editor: contentEdit.Editor = new contentEdit.Editor(
-      this.saver.MuteCommand.bind(this.saver)
-    );
+    private editor: contentEdit.Editor = new contentEdit.Editor(this.saver);
 
     private selector: sele.Selector = new sele.Selector();
 

@@ -1,12 +1,25 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { EditorContext } from "../../../App";
 import { htmlTag } from "../../../funcs/htmlDoms";
 import styles from "../style.module.scss";
-import { Subscription } from "rxjs";
 
 export interface IChild {
   ele: Element;
   id: string;
+}
+
+export function ParseChildren(ele: Element, pre: string = "_"): IChild[] {
+  let gcnt = 0;
+  return Array.from(ele.children)
+    .filter((child) => {
+      return !child.classList.contains("__WORKCLASS__");
+    })
+    .map((child) => {
+      return {
+        ele: child,
+        id: pre + "_" + (gcnt++).toString(),
+      } as IChild;
+    });
 }
 
 export interface IOutlineItem {
@@ -16,19 +29,11 @@ export interface IOutlineItem {
 
 export const OutlineItem = (props: IOutlineItem) => {
   const editor = useContext(EditorContext);
-  const sbsc = useRef<Subscription | null>(null);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const parseChildren = (): IChild[] => {
-    let gcnt = 0;
-    return Array.from(props.child.ele.children).map((child) => {
-      return {
-        ele: child,
-        id: props.child.id + "_" + (gcnt++).toString(),
-      } as IChild;
-    });
-  };
-  const [children, setChildren] = useState<IChild[]>(() => parseChildren());
+  const [children, setChildren] = useState<IChild[]>(
+    ParseChildren(props.child.ele, props.child.id)
+  );
 
   useEffect(() => {
     editor.$SelectionChange.subscribe((res) => {
@@ -42,11 +47,11 @@ export const OutlineItem = (props: IOutlineItem) => {
     editor.$ObserverSubject.subscribe((ml) => {
       ml.forEach((m) => {
         if (m.target === props.child.ele) {
-          setChildren(parseChildren());
+          setChildren(ParseChildren(props.child.ele, props.child.id));
         }
       });
     });
-    setChildren(parseChildren());
+    setChildren(ParseChildren(props.child.ele, props.child.id));
   }, [props]);
 
   useEffect(() => {
@@ -55,14 +60,13 @@ export const OutlineItem = (props: IOutlineItem) => {
     }
   }, [isOpen]);
 
-  sbsc.current?.unsubscribe();
   if (isActive) {
     editor.$ObserverSubject.subscribe((ml) => {
       const found = ml.find((m) => {
         return m.type === "characterData";
       });
       if (found) {
-        setChildren(parseChildren());
+        setChildren(ParseChildren(props.child.ele, props.child.id));
       }
     });
   }
@@ -80,6 +84,9 @@ export const OutlineItem = (props: IOutlineItem) => {
           className={`${styles.type} ${tag?.type ? styles[tag.type] : ""} `}
           onClick={(e) => {
             setIsOpen(!isOpen);
+            if (!isOpen) {
+              editor.SetSelect(props.child.ele as HTMLElement, true);
+            }
           }}>
           {`${tag?.name}`}
         </span>
@@ -88,7 +95,7 @@ export const OutlineItem = (props: IOutlineItem) => {
           onClick={(e) => {
             editor.SetSelect(props.child.ele as HTMLElement, true);
           }}>
-          {(props.child.ele.textContent?.trim())
+          {props.child.ele.textContent?.trim()
             ? props.child.ele.textContent.substring(0, 20)
             : "______"}
         </span>

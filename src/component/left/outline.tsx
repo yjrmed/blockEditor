@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { EditorContext } from "../../App";
-import { OutlineItem, IChild } from "./outline/item";
+import { OutlineItem, IChild, ParseChildren } from "./outline/item";
 import styles from "./style.module.scss";
 
 export const Outline = () => {
@@ -9,31 +9,17 @@ export const Outline = () => {
 
   useEffect(() => {
     editor.$ObserverSubject.subscribe((ml) => {
-      if (!rootChildren.length) {
-        parseChildren();
+      if (!rootChildren.length && editor.Layer) {
+        setRootChildren(ParseChildren(editor.Layer, "item_"));
       } else {
         ml.forEach((m) => {
           if (m.target === editor.Layer) {
-            parseChildren();
+            setRootChildren(ParseChildren(editor.Layer, "item_"));
           }
         });
       }
     });
   }, []);
-
-  const parseChildren = () => {
-    if (editor.Layer) {
-      let gcnt = 0;
-      setRootChildren(
-        Array.from(editor.Layer.children).map((child) => {
-          return {
-            ele: child,
-            id: "item_" + (gcnt++).toString(),
-          };
-        })
-      );
-    }
-  };
 
   return (
     <>

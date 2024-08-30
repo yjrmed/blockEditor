@@ -1,14 +1,16 @@
-import { fromEvent, Subscription, map } from "rxjs";
+import { fromEvent, Subscription } from "rxjs";
+import { saver } from "./saver";
 
 export namespace contentEdit {
   export class Editor {
-    constructor(private muteCommand: Function) {
+    constructor(private saver: saver.Saver) {
       this.endBreakLineSpace.textContent = "\u200B";
+      this.endBreakLineSpace.classList.add("__WORKCLASS__");
       this.endBreakLineSpace.setAttribute("contenteditable", "false");
     }
 
     private sbscReady: Subscription | null = null;
-    private sbscKeys: Subscription | null = null;
+    private sbscTargetEvents: Subscription | null = null;
     private endBreakLineSpace: HTMLSpanElement = document.createElement("span");
 
     private target: HTMLElement | null = null;
@@ -23,16 +25,11 @@ export namespace contentEdit {
           this.target = val;
           if (this.target) {
             this.sbscReady?.unsubscribe();
-            this.sbscReady = fromEvent(this.target, "pointerdown")
-              .pipe(
-                map((e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                })
-              )
-              .subscribe((res) => {
+            this.sbscReady = fromEvent(this.target, "pointerdown").subscribe(
+              (res) => {
                 this.Open();
-              });
+              }
+            );
           }
         }
       } else {
@@ -47,11 +44,12 @@ export namespace contentEdit {
     public Open() {
       this.sbscReady?.unsubscribe();
       if (this.target) {
-        this.sbscKeys?.unsubscribe();
+        this.sbscTargetEvents?.unsubscribe();
         this.target?.lastChild?.after(this.endBreakLineSpace);
-        this.sbscKeys = new Subscription();
-        this.sbscKeys.add(
+        this.sbscTargetEvents = new Subscription();
+        this.sbscTargetEvents.add(
           fromEvent(this.target, "keydown").subscribe((e) => {
+
             const ke = e as KeyboardEvent;
             if (!ke.ctrlKey) {
               if (ke.key === "Enter") {
@@ -64,7 +62,7 @@ export namespace contentEdit {
                   const br = document.createElement("br");
                   range.insertNode(br);
 
-                  this.muteCommand(() => {
+                  this.saver.MuteCommand(() => {
                     this.target?.lastChild?.after(this.endBreakLineSpace);
                   });
 
@@ -83,12 +81,28 @@ export namespace contentEdit {
             }
           })
         );
-        this.sbscKeys.add(
-          fromEvent(this.target, "keydown").subscribe((e) => {})
+
+        this.sbscTargetEvents.add(
+          fromEvent(this.target, "input").subscribe((e) => {
+            this.saver.MuteCommand(() => {
+              this.target?.lastChild?.after(this.endBreakLineSpace);
+            });
+          })
+        );
+
+        this.sbscTargetEvents.add(
+          fromEvent(this.target, "compositionstart").subscribe((e) => {
+            this.saver.Charge = true;
+          })
+        );
+        this.sbscTargetEvents.add(
+          fromEvent(this.target, "compositionend").subscribe((e) => {
+            this.saver.Charge = false;
+          })
         );
 
         const tar = this.target;
-        this.muteCommand(() => {
+        this.saver.MuteCommand(() => {
           tar.lastChild?.after(this.endBreakLineSpace);
           tar.setAttribute("contenteditable", "true");
         });
@@ -98,16 +112,15 @@ export namespace contentEdit {
     }
 
     public Close() {
-      this.sbscKeys?.unsubscribe();
+      this.sbscTargetEvents?.unsubscribe();
       this.sbscReady?.unsubscribe();
+      this.saver.Charge = false;
+      this.endBreakLineSpace.parentElement?.removeChild(this.endBreakLineSpace);
 
       if (this.target) {
         const tar = this.target;
-        this.muteCommand(() => {
+        this.saver.MuteCommand(() => {
           tar.removeAttribute("contenteditable");
-          this.endBreakLineSpace.parentElement?.removeChild(
-            this.endBreakLineSpace
-          );
         });
         this.target = null;
       }
