@@ -4,6 +4,7 @@ import { EditorContext, FilerContext } from "../../App";
 import { controller } from "../../funcs/controller";
 import DropDown from "../utils/dropdown";
 import { FormStyleSheet } from "./styleSheet";
+import { ArticleTitle } from "./title";
 
 interface ISetter {
   setPost: React.Dispatch<React.SetStateAction<controller.IPostItem | null>>;
@@ -45,9 +46,7 @@ export const Header = (props: ISetter) => {
           </DropDown.Body>
         </DropDown>
 
-        <div className={styles.title}>
-          {filer.Post && <h1>{filer.Post.title}</h1>}
-        </div>
+        <div className={styles.title}>{filer.Post && <ArticleTitle />}</div>
 
         <button onClick={exportLayer}>Export</button>
       </div>

@@ -73,3 +73,21 @@ header {
     }
   }
 }
+
+.articleTitle {
+  width: 100%;
+  padding: 0 $default_space;
+  input {
+    width: 100%;
+    text-align: center;
+    border: none;
+    font-weight: bold;
+    padding: 0.2em;
+    font-size: 1em;
+
+    &:focus {
+      outline: 0;
+      border: solid 1px lightgray;
+    }
+  }
+}

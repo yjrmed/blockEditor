@@ -48,6 +48,13 @@ export const OutlineItem = (props: IOutlineItem) => {
       ml.forEach((m) => {
         if (m.target === props.child.ele) {
           setChildren(ParseChildren(props.child.ele, props.child.id));
+        } else if (isActive) {
+          const found = ml.find((m) => {
+            return m.type === "characterData";
+          });
+          if (found) {
+            setChildren(ParseChildren(props.child.ele, props.child.id));
+          }
         }
       });
     });
@@ -59,17 +66,6 @@ export const OutlineItem = (props: IOutlineItem) => {
       props.setParentIsOpen(true);
     }
   }, [isOpen]);
-
-  if (isActive) {
-    editor.$ObserverSubject.subscribe((ml) => {
-      const found = ml.find((m) => {
-        return m.type === "characterData";
-      });
-      if (found) {
-        setChildren(ParseChildren(props.child.ele, props.child.id));
-      }
-    });
-  }
 
   const tag = htmlTag.GetTagInfo(props.child.ele as HTMLElement);
 
