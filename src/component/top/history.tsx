@@ -7,8 +7,8 @@ export const History = () => {
 
   return (
     <div className={styles.history}>
-      <button onClick={(e) => editor.History(-1)}>&#8656;</button>
-      <button onClick={(e) => editor.History(1)}>&#8658;</button>
+      <button onClick={(e) => editor.SaverHistory(-1)}>&#8656;</button>
+      <button onClick={(e) => editor.SaverHistory(1)}>&#8658;</button>
     </div>
   );
 };

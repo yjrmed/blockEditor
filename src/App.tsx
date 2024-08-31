@@ -24,16 +24,16 @@ function App() {
 
   useEffect(() => {
     new appEvents.AppKeyEvent(editor);
+    if (layer.current) {
+      editor.Initialization(layer.current);
+    }
   }, []);
 
   useEffect(() => {
     if (layer.current && article) {
-      layer.current.appendChild(article.article);
-      if (article) {
-        editor.Initialization(layer.current);
-      }
+      editor.SetArticle(article.article);
     }
-  });
+  }, [article]);
 
   return (
     <div className={styles.App}>

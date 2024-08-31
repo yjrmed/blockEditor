@@ -20,15 +20,15 @@ export const Timeline = () => {
     <>
       <div className={styles.wrapTimeline}>
         <div className={styles.history}>
-          <button onClick={(e) => editor.History(-1)}>&#8656;</button>
-          <button onClick={(e) => editor.History(1)}>&#8658;</button>
+          <button onClick={(e) => editor.SaverHistory(-1)}>&#8656;</button>
+          <button onClick={(e) => editor.SaverHistory(1)}>&#8658;</button>
         </div>
 
         {recs.forward.length > 0 && (
           <ul className={`${styles.recordList} ${styles.forward}`}>
             {recs.forward.map((rec, idx) => (
               <li
-                onClick={(e) => editor.History(recs.forward.length - idx)}
+                onClick={(e) => editor.SaverHistory(recs.forward.length - idx)}
                 key={rec.id}>
                 {rec.description ? rec.description : "______"}
               </li>
@@ -42,7 +42,7 @@ export const Timeline = () => {
               .slice()
               .reverse()
               .map((rec, idx) => (
-                <li onClick={(e) => editor.History(-(idx + 1))} key={rec.id}>
+                <li onClick={(e) => editor.SaverHistory(-(idx + 1))} key={rec.id}>
                   {rec.description ? rec.description : "______"}
                 </li>
               ))}

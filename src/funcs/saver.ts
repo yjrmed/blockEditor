@@ -19,6 +19,8 @@ export namespace saver {
         characterData: true,
         characterDataOldValue: true,
       });
+      this.back = [];
+      this.forward = [];
       this.$ObserverSubject.next([]);
     }
 

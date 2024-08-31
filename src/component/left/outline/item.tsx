@@ -7,6 +7,7 @@ import { Subscription } from "rxjs";
 export interface IChild {
   ele: Element;
   id: string;
+  tag: htmlTag.IHtmlTag | null;
 }
 
 export function ParseChildren(ele: Element, pre: string = "_"): IChild[] {
@@ -18,6 +19,7 @@ export function ParseChildren(ele: Element, pre: string = "_"): IChild[] {
     .map((child) => {
       return {
         ele: child,
+        tag: htmlTag.GetTagInfo(child as HTMLElement),
         id: pre + "_" + (gcnt++).toString(),
       } as IChild;
     });
@@ -76,8 +78,6 @@ export const OutlineItem = (props: IOutlineItem) => {
     }
   }, [isOpen]);
 
-  const tag = htmlTag.GetTagInfo(props.child.ele as HTMLElement);
-
   return (
     <li
       className={`
@@ -86,14 +86,16 @@ export const OutlineItem = (props: IOutlineItem) => {
         ${isOpen ? styles.open : ""}`}>
       <label id={props.child.id} className={`${isActive ? styles.active : ""}`}>
         <span
-          className={`${styles.type} ${tag?.type ? styles[tag.type] : ""} `}
+          className={`${styles.type} ${
+            props.child.tag?.type ? styles[props.child.tag.type] : ""
+          } `}
           onClick={(e) => {
             setIsOpen(!isOpen);
             if (!isOpen) {
               editor.SetSelect(props.child.ele as HTMLElement, true);
             }
           }}>
-          {`${tag?.name}`}
+          {`${props.child.tag?.name}`}
         </span>
         <span
           className={styles.txt}

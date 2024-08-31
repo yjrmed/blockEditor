@@ -21,11 +21,21 @@ export namespace controller {
           this.SeleObj = res;
         }
       });
-      this.saver.Initialization(layer);
       this.treeWalker = document.createTreeWalker(
         layer,
         NodeFilter.SHOW_ELEMENT
       );
+    }
+
+    public SetArticle(article: HTMLElement) {
+      if (this.Layer) {
+        const layer = this.Layer;
+        this.saver.Mute(() => {
+          layer.innerHTML = "";
+          layer.appendChild(article);
+        });
+        this.saver.Initialization(layer);
+      }
     }
 
     public get IsSelecting(): boolean {
@@ -161,7 +171,7 @@ export namespace controller {
       this.saver.Flash(description);
     }
 
-    public History(step: number): void {
+    public SaverHistory(step: number): void {
       let node: Node | null = null;
       if (step > 0) {
         while (step-- > 0) {
