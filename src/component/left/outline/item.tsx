@@ -10,7 +10,7 @@ export interface IChild {
   tag: htmlTag.IHtmlTag | null;
 }
 
-export function ParseChildren(ele: Element, pre: string = "_"): IChild[] {
+export function ParseChildren(ele: Element, pre: string = ""): IChild[] {
   let gcnt = 0;
   return Array.from(ele.children)
     .filter((child) => {

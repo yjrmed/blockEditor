@@ -11,11 +11,11 @@ export const Outline = () => {
     const sbsc = editor.$ObserverSubject.subscribe((ml) => {
       if (editor.Layer) {
         if (!rootChildren.length) {
-          setRootChildren(ParseChildren(editor.Layer, "item_"));
+          setRootChildren(ParseChildren(editor.Layer));
         } else {
           ml.forEach((m) => {
             if (m.target === editor.Layer) {
-              setRootChildren(ParseChildren(editor.Layer, "item_"));
+              setRootChildren(ParseChildren(editor.Layer));
             }
           });
         }
