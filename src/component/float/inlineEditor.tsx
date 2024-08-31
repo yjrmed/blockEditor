@@ -21,7 +21,7 @@ export const InlineEditor = (props: IInlineItem) => {
       if (order) {
         if (cb.checked) {
           if (!order.isCollapsed) {
-            editor.ExecCommand(() => {
+            editor.SaverCommand(() => {
               cmdFunc.RangeCapTagCommand(
                 tagInfo.name,
                 order.startNode,
@@ -33,7 +33,7 @@ export const InlineEditor = (props: IInlineItem) => {
           }
         } else {
           if (!order.isCollapsed) {
-            editor.ExecCommand(() => {
+            editor.SaverCommand(() => {
               cmdFunc.RemoveRangeCapTagCommand(
                 tagInfo.name,
                 order.startNode,
@@ -51,7 +51,7 @@ export const InlineEditor = (props: IInlineItem) => {
   const stripInlineTag = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (editor.Inline) {
       const tar = editor.Inline.ele;
-      const rslt = editor.ExecCommand(() => {
+      const rslt = editor.SaverCommand(() => {
         domFuncs.StripTag(tar);
       }, `Strip tag: ${tar.tagName}`);
       if (rslt && editor.Block) {

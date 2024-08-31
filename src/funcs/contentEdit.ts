@@ -62,7 +62,7 @@ export namespace contentEdit {
                   const br = document.createElement("br");
                   range.insertNode(br);
 
-                  this.saver.MuteCommand(() => {
+                  this.saver.Mute(() => {
                     this.target?.lastChild?.after(this.endBreakLineSpace);
                   });
 
@@ -84,7 +84,7 @@ export namespace contentEdit {
 
         this.sbscTargetEvents.add(
           fromEvent(this.target, "input").subscribe((e) => {
-            this.saver.MuteCommand(() => {
+            this.saver.Mute(() => {
               this.target?.lastChild?.after(this.endBreakLineSpace);
             });
           })
@@ -92,17 +92,17 @@ export namespace contentEdit {
 
         this.sbscTargetEvents.add(
           fromEvent(this.target, "compositionstart").subscribe((e) => {
-            this.saver.Charge = true;
+            this.saver.SetCharge();
           })
         );
         this.sbscTargetEvents.add(
           fromEvent(this.target, "compositionend").subscribe((e) => {
-            this.saver.Charge = false;
+            this.saver.Flash();
           })
         );
 
         const tar = this.target;
-        this.saver.MuteCommand(() => {
+        this.saver.Mute(() => {
           tar.lastChild?.after(this.endBreakLineSpace);
           tar.setAttribute("contenteditable", "true");
         });
@@ -114,12 +114,12 @@ export namespace contentEdit {
     public Close() {
       this.sbscTargetEvents?.unsubscribe();
       this.sbscReady?.unsubscribe();
-      this.saver.Charge = false;
+      this.saver.Flash()
       this.endBreakLineSpace.parentElement?.removeChild(this.endBreakLineSpace);
 
       if (this.target) {
         const tar = this.target;
-        this.saver.MuteCommand(() => {
+        this.saver.Mute(() => {
           tar.removeAttribute("contenteditable");
         });
         this.target = null;

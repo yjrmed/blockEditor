@@ -149,12 +149,16 @@ export namespace controller {
       return this.saver.CommnadList;
     }
 
-    public ExecCommand(func: Function, description?: string): boolean {
+    public SaverCommand(func: Function, description?: string): boolean {
       return this.saver.Command(func, description);
     }
 
-    public ExecMuteCommand(func: Function): MutationRecord[] | undefined {
-      return this.saver.MuteCommand(func);
+    public SaverSetCharge() {
+      this.saver.SetCharge();
+    }
+
+    public SaverFlash(description?: string) {
+      this.saver.Flash(description);
     }
 
     public History(step: number): void {

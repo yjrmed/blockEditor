@@ -7,7 +7,7 @@ interface IImg {
   img: HTMLImageElement;
 }
 
-interface Attrs {
+interface TargetAttrs {
   src: string;
   alt: string;
   width: number;
@@ -18,9 +18,8 @@ interface Attrs {
 export const ImgProp = (props: IImg) => {
   const editor = useContext(EditorContext);
   const form = useRef<HTMLFormElement>(null);
-  const sbsc = useRef<Subscription>(new Subscription());
   const item = useRef<HTMLImageElement>(props.img);
-  const extractVals = (tar: HTMLImageElement): Attrs => {
+  const extractVals = (tar: HTMLImageElement): TargetAttrs => {
     return {
       src: tar.src,
       alt: tar.alt,
@@ -29,50 +28,48 @@ export const ImgProp = (props: IImg) => {
       loading: tar.loading,
     };
   };
-  const [attrs, setAttrs] = useState<Attrs>(extractVals(item.current));
+  const [attrs, setAttrs] = useState<TargetAttrs>(extractVals(props.img));
+
+  useEffect(() => {
+    const sbsc = editor.$ObserverSubject.subscribe((ml) => {
+      const found = ml.reverse().find((m) => {
+        return m.target === item.current && m.type === "attributes";
+      });
+      if (found) {
+        setAttrs(extractVals(item.current));
+      }
+    });
+    return () => {
+      sbsc.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     item.current = props.img;
     setAttrs(extractVals(props.img));
   }, [props.img]);
 
-  sbsc.current.unsubscribe();
-  sbsc.current = editor.$ObserverSubject.subscribe((ml) => {
-    const found = ml.reverse().find((m) => {
-      return m.target === item.current && m.type === "attributes";
-    });
-    if (found) {
-      setAttrs(extractVals(item.current));
-    }
-  });
-
   const muteSet = (e: React.ChangeEvent<HTMLInputElement>) => {
     const tar = e.target as HTMLInputElement;
-    editor.ExecMuteCommand(() => {
-      props.img.setAttribute(tar.name, tar.value);
-    });
+    editor.SaverSetCharge();
+    props.img.setAttribute(tar.name, tar.value);
+    setAttrs(extractVals(item.current));
   };
 
   const pushSet = (e: React.FocusEvent) => {
     const tar = e.target as HTMLInputElement;
-    const initVal = (attrs as any)[tar.name];
-    const currentVal: any =
-      tar.type === "number" ? parseFloat(tar.value) : tar.value;
-    if (initVal !== currentVal) {
-      editor.ExecMuteCommand(() => {
-        props.img.setAttribute(tar.name, initVal);
-      });
-      props.img.setAttribute(tar.name, currentVal);
-    }
+    editor.SaverFlash(`change ${tar.name}`);
   };
 
   const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const tar = e.target as HTMLSelectElement;
-    if (tar.value) {
-      props.img.setAttribute(tar.name, tar.value);
-    } else {
-      props.img.removeAttribute(tar.name);
-    }
+    editor.SaverCommand(() => {
+      if (tar.value) {
+        props.img.setAttribute(tar.name, tar.value);
+      } else {
+        props.img.removeAttribute(tar.name);
+      }
+    }, `change ${tar.name}`);
   };
 
   return (
@@ -94,7 +91,7 @@ export const ImgProp = (props: IImg) => {
             name="src"
             onChange={muteSet}
             onBlur={pushSet}
-            defaultValue={attrs.src}
+            value={attrs.src}
           />
         </div>
       </div>
@@ -108,7 +105,7 @@ export const ImgProp = (props: IImg) => {
             name="alt"
             onChange={muteSet}
             onBlur={pushSet}
-            defaultValue={attrs.alt}
+            value={attrs.alt}
           />
         </div>
       </div>
@@ -124,7 +121,7 @@ export const ImgProp = (props: IImg) => {
               name="width"
               onChange={muteSet}
               onBlur={pushSet}
-              defaultValue={attrs.width}
+              value={attrs.width}
             />
           </div>
           <div className={styles.subitem}>
@@ -134,7 +131,7 @@ export const ImgProp = (props: IImg) => {
               name="height"
               onChange={muteSet}
               onBlur={pushSet}
-              defaultValue={attrs.height}
+              value={attrs.height}
             />
           </div>
         </div>
@@ -148,7 +145,7 @@ export const ImgProp = (props: IImg) => {
             name="loading"
             id="select_loading"
             onChange={onChangeSelect}
-            defaultValue={attrs.loading}>
+            value={attrs.loading}>
             <option value="">eager(default)</option>
             <option value="lazy">lazy</option>
           </select>

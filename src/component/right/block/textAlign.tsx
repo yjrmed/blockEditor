@@ -42,7 +42,7 @@ export const TextAlign = (props: ITextAlign) => {
   const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const tar = e.target as HTMLSelectElement;
     const cs = new utilis.CreateStyle(item.current);
-    editor.ExecCommand(() => {
+    editor.SaverCommand(() => {
       cs.Add(tar.name, tar.value);
       cs.SetToElement();
     }, `change text-aling${tar.value ? "(" + tar.value + ")" : ""}`);

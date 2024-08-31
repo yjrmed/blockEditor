@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { EditorContext } from "../../../App";
 import styles from "../style.module.scss";
-import { Subscription } from "rxjs";
 
 interface IAProp {
   anchor: HTMLAnchorElement;
 }
 
-interface Attrs {
+interface TargetAttrs {
   href: string;
   target: string;
   rel: string;
@@ -16,9 +15,8 @@ interface Attrs {
 export const AProp = (props: IAProp) => {
   const editor = useContext(EditorContext);
   const form = useRef<HTMLFormElement>(null);
-  const sbsc = useRef<Subscription>(new Subscription());
   const item = useRef<HTMLAnchorElement>(props.anchor);
-  const extractVals = (tar: HTMLAnchorElement): Attrs => {
+  const extractVals = (tar: HTMLAnchorElement): TargetAttrs => {
     return {
       href: tar.href,
       target: tar.target,
@@ -26,50 +24,48 @@ export const AProp = (props: IAProp) => {
     };
   };
 
-  const [attrs, setAttrs] = useState<Attrs>(extractVals(item.current));
+  const [attrs, setAttrs] = useState<TargetAttrs>(extractVals(props.anchor));
+
+  useEffect(() => {
+    const sbsc = editor.$ObserverSubject.subscribe((ml) => {
+      const found = ml.reverse().find((m) => {
+        return m.target === item.current && m.type === "attributes";
+      });
+      if (found) {
+        setAttrs(extractVals(item.current));
+      }
+    });
+    return () => {
+      sbsc.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     item.current = props.anchor;
     setAttrs(extractVals(props.anchor));
   }, [props.anchor]);
 
-  sbsc.current.unsubscribe();
-  sbsc.current = editor.$ObserverSubject.subscribe((ml) => {
-    const found = ml.reverse().find((m) => {
-      return m.target === item.current && m.type === "attributes";
-    });
-    if (found) {
-      setAttrs(extractVals(item.current));
-    }
-  });
-
   const muteSet = (e: React.ChangeEvent<HTMLInputElement>) => {
     const tar = e.target as HTMLInputElement;
-    editor.ExecMuteCommand(() => {
-      props.anchor.setAttribute(tar.name, tar.value);
-    });
+    editor.SaverSetCharge();
+    props.anchor.setAttribute(tar.name, tar.value);
+    setAttrs(extractVals(item.current));
   };
 
   const pushSet = (e: React.FocusEvent) => {
     const tar = e.target as HTMLInputElement;
-    const initVal = (attrs as any)[tar.name];
-    if (initVal !== tar.value) {
-      editor.ExecMuteCommand(() => {
-        props.anchor.setAttribute(tar.name, initVal);
-      });
-      editor.ExecCommand(() => {
-        props.anchor.setAttribute(tar.name, tar.value);
-      }, `change A gag prop ${tar.name}`);
-    }
+    editor.SaverFlash(`change ${tar.name}`);
   };
 
   const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const tar = e.target as HTMLSelectElement;
-    if (tar.value) {
-      props.anchor.setAttribute(tar.name, tar.value);
-    } else {
-      props.anchor.removeAttribute(tar.name);
-    }
+    editor.SaverCommand(() => {
+      if (tar.value) {
+        props.anchor.setAttribute(tar.name, tar.value);
+      } else {
+        props.anchor.removeAttribute(tar.name);
+      }
+    }, `change ${tar.name}`);
   };
 
   return (
@@ -91,7 +87,7 @@ export const AProp = (props: IAProp) => {
             name="href"
             onChange={muteSet}
             onBlur={pushSet}
-            defaultValue={attrs.href}
+            value={attrs.href}
           />
         </div>
       </div>
@@ -104,7 +100,7 @@ export const AProp = (props: IAProp) => {
             name="target"
             id="select_target"
             onChange={onChangeSelect}
-            defaultValue={attrs.target}>
+            value={attrs.target}>
             <option value="">_self(default)</option>
             <option value="_blank">_blank</option>
             <option value="_parent">_parent</option>
@@ -122,7 +118,7 @@ export const AProp = (props: IAProp) => {
             name="rel"
             onChange={muteSet}
             onBlur={pushSet}
-            defaultValue={attrs.rel}
+            value={attrs.rel}
           />
         </div>
       </div>

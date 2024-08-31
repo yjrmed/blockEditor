@@ -55,7 +55,7 @@ export const FontWeight = (props: IFontWeightProp) => {
   const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const tar = e.target as HTMLSelectElement;
     const cs = new utilis.CreateStyle(item.current);
-    editor.ExecCommand(() => {
+    editor.SaverCommand(() => {
       cs.Add(tar.name, tar.value);
       cs.SetToElement();
     }, `change font-weight${tar.value ? "(" + tar.value + ")" : ""}`);

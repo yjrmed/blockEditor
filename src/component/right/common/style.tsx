@@ -2,7 +2,6 @@ import { useContext, useRef, useState, useEffect } from "react";
 import { EditorContext } from "../../../App";
 import styles from "./style.module.scss";
 import { utilis } from "../../../funcs/utlis";
-import { Subscription } from "rxjs";
 
 interface IEleStyle {
   item: HTMLElement;
@@ -11,38 +10,41 @@ interface IEleStyle {
 export const EleStyle = (props: IEleStyle) => {
   const editor = useContext(EditorContext);
   const form = useRef<HTMLFormElement>(null);
-  const sbsc = useRef<Subscription>(new Subscription());
   const item = useRef<HTMLElement>(props.item);
   const [styleValue, setStyleValue] = useState<
     { key: string; value: string }[]
   >(utilis.CreateStyle.GetListFromValue(item.current.getAttribute("style")));
-  const isChangedWithMute = useRef<boolean>(false);
+
+  useEffect(() => {
+    const sbsc = editor.$ObserverSubject.subscribe((ml) => {
+      const found = ml.reverse().find((m) => {
+        return (
+          m.target === item.current &&
+          m.type === "attributes" &&
+          m.attributeName === "style"
+        );
+      });
+      if (found) {
+        setStyleValue(
+          utilis.CreateStyle.GetListFromValue(
+            item.current.getAttribute("style")
+          )
+        );
+      }
+    });
+    return () => {
+      sbsc.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     item.current = props.item;
-    isChangedWithMute.current = false;
     setStyleValue(
       utilis.CreateStyle.GetListFromValue(props.item.getAttribute("style"))
     );
   }, [props.item]);
 
-  sbsc.current.unsubscribe();
-  sbsc.current = editor.$ObserverSubject.subscribe((ml) => {
-    const found = ml.reverse().find((m) => {
-      return (
-        m.target === item.current &&
-        m.type === "attributes" &&
-        m.attributeName === "style"
-      );
-    });
-    if (found) {
-      setStyleValue(
-        utilis.CreateStyle.GetListFromValue(item.current.getAttribute("style"))
-      );
-    }
-  });
-
-  const getViewList = (): { key: string; value: string }[] => {
+  const getCurrentList = (): { key: string; value: string }[] => {
     if (form.current) {
       return Array.from(form.current.querySelectorAll(".item"))
         .map((wi) => {
@@ -57,22 +59,31 @@ export const EleStyle = (props: IEleStyle) => {
     return [];
   };
 
-  const getItemInputs = (
-    tar: Element
-  ): {
-    isNew: boolean;
-    key: HTMLInputElement;
-    value: HTMLInputElement;
-  } | null => {
-    const wrap = tar.closest(".item") as HTMLDivElement;
-    if (wrap) {
-      return {
-        isNew: wrap.classList.contains("new"),
-        key: wrap.children[0] as HTMLInputElement,
-        value: wrap.children[1] as HTMLInputElement,
-      };
-    } else {
-      return null;
+  const changeSet = (e: React.ChangeEvent<HTMLInputElement>) => {
+    editor.SaverSetCharge();
+    const current = getCurrentList();
+    item.current.setAttribute(
+      "style",
+      utilis.CreateStyle.GetValueString(current)
+    );
+    setStyleValue(current);
+  };
+
+  const changeSetNew = (e: React.ChangeEvent<HTMLInputElement>) => {
+    editor.SaverSetCharge();
+    if (form.current) {
+      const _form = form.current;
+      if (_form.new_key.value && _form.new_value.value) {
+        const current = getCurrentList();
+        current.push({
+          key: _form.new_key.value,
+          value: _form.new_value.value,
+        });
+        item.current.setAttribute(
+          "style",
+          utilis.CreateStyle.GetValueString(current)
+        );
+      }
     }
   };
 
@@ -83,61 +94,26 @@ export const EleStyle = (props: IEleStyle) => {
     }
   };
 
-  const muteSet = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const ml = editor.ExecMuteCommand(() => {
-      item.current.setAttribute(
-        "style",
-        utilis.CreateStyle.GetValueString(getViewList())
-      );
-    });
-    if (ml?.length) {
-      isChangedWithMute.current = true;
-      const sitem = getItemInputs(e.target);
-      if (sitem && !sitem.isNew) {
-        setStyleValue(
-          utilis.CreateStyle.GetListFromValue(
-            item.current.getAttribute("style")
-          )
-        );
-        if (!e.target.value) {
-          saveSet(`delete style ${sitem.key.value}`);
-          form.current?.new_key.focus();
-        }
-      }
-    }
-  };
-
-  const saveSet = (description: string) => {
-    editor.ExecCommand(() => {
-      const strVal = utilis.CreateStyle.GetValueString(getViewList());
-      if (strVal) {
-        item.current.setAttribute("style", strVal);
-      } else {
-        item.current.removeAttribute("style");
-      }
-    }, description);
-    setStyleValue(getViewList());
-    isChangedWithMute.current = false;
-  };
-
   const onBlurForm = (e: React.FocusEvent) => {
-    if (isChangedWithMute.current) {
-      if (form.current?.contains(e.relatedTarget)) {
-        const sitem = getItemInputs(e.target);
-        if (sitem) {
-          if (sitem.isNew) {
-            if (sitem.key.value && sitem.value.value) {
-              saveSet(`add style ${sitem.key.value}`);
-              clearNewInputs();
-            }
-          } else {
-            saveSet(`change style ${sitem.key.value}`);
-          }
+    if (form.current?.contains(e.relatedTarget)) {
+      const _form = form.current;
+      if (e.target.classList.contains("new")) {
+        if (_form.new_key.value && _form.new_value.value) {
+          setStyleValue((pre) => {
+            const copy = [...pre];
+            copy.push({
+              key: _form.new_key.value,
+              value: _form.new_value.value,
+            });
+            editor.SaverFlash(`add style ${_form.new_key.value}`);
+            clearNewInputs();
+            return copy;
+          });
         }
-      } else {
-        saveSet(`save style`);
-        clearNewInputs();
       }
+    } else {
+      editor.SaverFlash("change style");
+      clearNewInputs();
     }
   };
 
@@ -158,33 +134,35 @@ export const EleStyle = (props: IEleStyle) => {
               type="text"
               name={`${idx}_${style.key}`}
               value={style.key}
-              onChange={muteSet}
+              onChange={changeSet}
               placeholder="key"
             />
             <input
               type="text"
               name={`${idx}_${style.key}`}
               value={style.value}
-              onChange={muteSet}
+              onChange={changeSet}
               placeholder="value"
             />
           </div>
         );
       })}
-      <div className={`new item ${styles.wi}`}>
+      <div className={styles.wi}>
         <input
           autoFocus
+          className="new"
           type="text"
           name="new_key"
           defaultValue=""
-          onChange={muteSet}
+          onChange={changeSetNew}
           placeholder="new key"
         />
         <input
+          className="new"
           type="text"
           name="new_value"
           defaultValue=""
-          onChange={muteSet}
+          onChange={changeSetNew}
           placeholder="new value"
         />
       </div>

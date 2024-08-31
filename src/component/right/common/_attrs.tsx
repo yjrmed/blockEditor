@@ -74,7 +74,7 @@ export const EleAttrs = (props: IEleAttrs) => {
     change: changeItem | null,
     description?: string
   ) => {
-    editor.ExecCommand(() => {
+    editor.SaverCommand(() => {
       list.forEach((akv, idx) => {
         item.current.removeAttribute(akv.key);
         if (idx === change?.idx) {
@@ -96,27 +96,27 @@ export const EleAttrs = (props: IEleAttrs) => {
   const muteSet = (e: React.ChangeEvent<HTMLInputElement>) => {
     const change = getEventItem(e.target);
     if (change && change.idx !== null) {
-      const ml = editor.ExecMuteCommand(() => {
-        attrs.forEach((akv, idx) => {
-          item.current.removeAttribute(akv.key);
-          if (idx === change.idx) {
-            if (change.tar.key) {
-              item.current.setAttribute(change.tar.key, change.tar.value);
-            }
-          } else {
-            item.current.setAttribute(akv.key, akv.value ? akv.value : "");
-          }
-        });
-      });
-      isChangedWithMute.current = Boolean(ml?.length);
-      const newList = getAttrList(item.current);
-      if (!change.tar.key) {
-        // 変更イベントが発生しない。
-        setSave(newList, null, "remove attr");
-        form.current?.new_key.focus();
-      } else {
-        setAttrs(newList);
-      }
+      // const ml = editor.SaverMute(() => {
+      //   attrs.forEach((akv, idx) => {
+      //     item.current.removeAttribute(akv.key);
+      //     if (idx === change.idx) {
+      //       if (change.tar.key) {
+      //         item.current.setAttribute(change.tar.key, change.tar.value);
+      //       }
+      //     } else {
+      //       item.current.setAttribute(akv.key, akv.value ? akv.value : "");
+      //     }
+      //   });
+      // });
+      // isChangedWithMute.current = Boolean(ml?.length);
+      // const newList = getAttrList(item.current);
+      // if (!change.tar.key) {
+      //   // 変更イベントが発生しない。
+      //   setSave(newList, null, "remove attr");
+      //   form.current?.new_key.focus();
+      // } else {
+      //   setAttrs(newList);
+      // }
     }
   };
 

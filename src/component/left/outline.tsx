@@ -8,16 +8,21 @@ export const Outline = () => {
   const [rootChildren, setRootChildren] = useState<IChild[]>([]);
 
   useEffect(() => {
-    editor.$ObserverSubject.subscribe((ml) => {
-      if (!rootChildren.length && editor.Layer) {
-        setRootChildren(ParseChildren(editor.Layer, "item_"));
-      } else {
-        ml.forEach((m) => {
-          if (m.target === editor.Layer) {
-            setRootChildren(ParseChildren(editor.Layer, "item_"));
-          }
-        });
+    const sbsc = editor.$ObserverSubject.subscribe((ml) => {
+      if (editor.Layer) {
+        if (!rootChildren.length) {
+          setRootChildren(ParseChildren(editor.Layer, "item_"));
+        } else {
+          ml.forEach((m) => {
+            if (m.target === editor.Layer) {
+              setRootChildren(ParseChildren(editor.Layer, "item_"));
+            }
+          });
+        }
       }
+      return () => {
+        sbsc.unsubscribe();
+      };
     });
   }, []);
 
@@ -26,7 +31,7 @@ export const Outline = () => {
       {rootChildren.length > 0 && (
         <div className={styles.wrapOutline}>
           <ul className={styles.ulOutline}>
-            {rootChildren.map((child) => (
+            {rootChildren.map((child, idx) => (
               <OutlineItem
                 child={child}
                 setParentIsOpen={() => {}}

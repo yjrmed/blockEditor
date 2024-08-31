@@ -46,6 +46,7 @@
     text-overflow: ellipsis;
     display: inline-block;
     white-space: nowrap;
+    cursor: pointer;
 
     span {
       &.type {

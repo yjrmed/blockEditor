@@ -52,7 +52,7 @@ export const FontFamily = (props: IFontFamilyProp) => {
   const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const tar = e.target as HTMLSelectElement;
     const cs = new utilis.CreateStyle(item.current);
-    editor.ExecCommand(() => {
+    editor.SaverCommand(() => {
       cs.Add(tar.name, tar.value);
       cs.SetToElement();
     }, `change font-family${tar.value ? "(" + tar.value + ")" : ""}`);

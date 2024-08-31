@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { EditorContext } from "../../../App";
 import { htmlTag } from "../../../funcs/htmlDoms";
 import styles from "../style.module.scss";
+import { Subscription } from "rxjs";
 
 export interface IChild {
   ele: Element;
@@ -36,30 +37,38 @@ export const OutlineItem = (props: IOutlineItem) => {
   );
 
   useEffect(() => {
-    editor.$SelectionChange.subscribe((res) => {
-      if (res?.block.ele === props.child.ele) {
-        setIsActive(true);
-        setIsOpen(true);
-      } else {
-        setIsActive(false);
-      }
-    });
-    editor.$ObserverSubject.subscribe((ml) => {
-      ml.forEach((m) => {
-        if (m.target === props.child.ele) {
-          setChildren(ParseChildren(props.child.ele, props.child.id));
-        } else if (isActive) {
-          const found = ml.find((m) => {
-            return m.type === "characterData";
-          });
-          if (found) {
-            setChildren(ParseChildren(props.child.ele, props.child.id));
-          }
+    const sbsc = new Subscription();
+    sbsc.add(
+      editor.$SelectionChange.subscribe((res) => {
+        if (res?.block.ele === props.child.ele) {
+          setIsActive(true);
+          setIsOpen(true);
+        } else {
+          setIsActive(false);
         }
-      });
-    });
+      })
+    );
+    sbsc.add(
+      editor.$ObserverSubject.subscribe((ml) => {
+        ml.forEach((m) => {
+          if (m.target === props.child.ele) {
+            setChildren(ParseChildren(props.child.ele, props.child.id));
+          } else if (isActive) {
+            const found = ml.find((m) => {
+              return m.type === "characterData";
+            });
+            if (found) {
+              setChildren(ParseChildren(props.child.ele, props.child.id));
+            }
+          }
+        });
+      })
+    );
     setChildren(ParseChildren(props.child.ele, props.child.id));
-  }, [props]);
+    return () => {
+      sbsc.unsubscribe();
+    };
+  }, [props.child]);
 
   useEffect(() => {
     if (isOpen) {

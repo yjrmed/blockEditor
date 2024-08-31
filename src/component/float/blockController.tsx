@@ -28,7 +28,7 @@ export const BlockEditor = (props: IBlockEditor) => {
     if (editor.Block?.ele) {
       const tar = editor.Block.ele;
       const next = editor.Block.ele.nextElementSibling as HTMLElement;
-      const rslt = editor.ExecCommand(() => {
+      const rslt = editor.SaverCommand(() => {
         tar.remove();
       }, `Delete ${tar.tagName}`);
       if (rslt && next) {
@@ -42,7 +42,7 @@ export const BlockEditor = (props: IBlockEditor) => {
       const tar = editor.Block.ele;
       const newEle = document.createElement(tn);
       newEle.textContent = `new ${tn} is appended`;
-      const rslt = editor.ExecCommand(() => {
+      const rslt = editor.SaverCommand(() => {
         tar.appendChild(newEle);
       }, `Append Child ${tar.tagName}`);
       if (rslt) {
@@ -56,7 +56,7 @@ export const BlockEditor = (props: IBlockEditor) => {
       const tar = editor.Block.ele;
       const newEle = document.createElement(tn);
       newEle.textContent = `${tn}: Before`;
-      const rslt = editor.ExecCommand(() => {
+      const rslt = editor.SaverCommand(() => {
         tar.before(newEle);
       }, `Before ${newEle.tagName}`);
       if (rslt) {
@@ -69,7 +69,7 @@ export const BlockEditor = (props: IBlockEditor) => {
     if (editor.Block?.ele) {
       const tar = editor.Block.ele;
       const newEle = domFuncs.SafeCloenEle(tar);
-      const rslt = editor.ExecCommand(() => {
+      const rslt = editor.SaverCommand(() => {
         tar.after(newEle);
       }, `Duplication ${newEle.tagName}`);
       if (rslt) {

@@ -27,18 +27,8 @@ export namespace saver {
 
     private _charge: boolean = false;
     private chargeMRs: MutationRecord[][] = [];
-    get Charge(): boolean {
-      return this._charge;
-    }
-    set Charge(val: boolean) {
-      this._charge = val;
-      if (!val && this.chargeMRs.length) {
-        const merged = this.chargeMRs.reduce((accumulator, currentArray) => {
-          return accumulator.concat(currentArray);
-        }, []);
-        this.stackBack(merged);
-        this.chargeMRs = [];
-      }
+    get IsChanged(): boolean {
+      return this.chargeMRs.length > 0;
     }
 
     private observer: MutationObserver = new MutationObserver(
@@ -86,13 +76,34 @@ export namespace saver {
       return true;
     }
 
-    public MuteCommand(command: Function): MutationRecord[] | undefined {
+    public Mute(command: Function): MutationRecord[] | undefined {
       try {
         command();
         return this.observer.takeRecords();
       } catch (e) {
         console.warn(e);
       }
+    }
+
+    public SetCharge() {
+      this._charge = true;
+    }
+
+    public Flash(_description?: string) {
+      if (this.chargeMRs.length) {
+        const merged = this.chargeMRs.reduce((accumulator, currentArray) => {
+          return accumulator.concat(currentArray);
+        }, []);
+        this.back.push({
+          id: utilis.GenRandomString(),
+          timestamp: Date.now(),
+          description: _description,
+          mrs: merged,
+        });
+        this.chargeMRs = [];
+        this.$ObserverSubject.next(merged);
+      }
+      this._charge = false;
     }
 
     public Back(): Node | null {
