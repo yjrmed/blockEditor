@@ -1,0 +1,80 @@
+header {
+  width: 100%;
+  z-index: 1;
+  height: 30px;
+}
+header button:hover {
+  cursor: pointer;
+}
+header .inner {
+  position: fixed;
+  width: 100% !important;
+  height: 30px;
+  top: 0;
+  z-index: 1;
+  background: white;
+  border-bottom: solid 1px lightgray;
+  display: flex;
+  align-items: stretch;
+}
+header .inner .title {
+  width: 100%;
+  text-align: center;
+}
+header .inner .title h1 {
+  font-size: 1em;
+  margin: 0;
+}
+
+.history {
+  display: flex;
+  align-items: stretch;
+}
+
+.dropButton {
+  height: 100%;
+}
+
+.formStyleSheet {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 2px 3px 5px gray;
+  padding: 10px;
+}
+.formStyleSheet ul {
+  margin: 0;
+  padding: 0;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  list-style-type: none;
+}
+.formStyleSheet ul li {
+  white-space: nowrap;
+}
+.formStyleSheet ul li input {
+  vertical-align: middle;
+  cursor: pointer;
+}
+.formStyleSheet ul li label {
+  cursor: pointer;
+}
+.formStyleSheet ul li > *:not(:last-child) {
+  margin-right: 3px;
+}
+
+.articleTitle {
+  width: 100%;
+  padding: 0 3px;
+}
+.articleTitle input {
+  width: 100%;
+  text-align: center;
+  border: none;
+  font-weight: bold;
+  padding: 0.2em;
+  font-size: 1em;
+}
+.articleTitle input:focus {
+  outline: 0;
+  border: solid 1px lightgray;
+}/*# sourceMappingURL=style.module.css.map */

@@ -45,6 +45,8 @@ export const OutlineItem = (props: IOutlineItem) => {
         if (res?.block.ele === props.child.ele) {
           setIsActive(true);
           setIsOpen(true);
+        } else if (res?.Inline?.ele === props.child.ele) {
+          setIsActive(true);
         } else {
           setIsActive(false);
         }

@@ -1,0 +1,82 @@
+.rightAside {
+  width: 200px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.rightAside .inner {
+  position: sticky;
+  top: 30px;
+  left: 0;
+  max-height: calc(100vh - 30px);
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.rightAside .inner::-webkit-scrollbar {
+  display: none;
+}
+.rightAside .inner .tarLabel {
+  display: flex;
+  align-items: center;
+  padding: 0 0.2em;
+  gap: 0.2em;
+}
+.rightAside .inner .tarLabel span:first-of-type {
+  border: solid 1px lightgray;
+  font-size: 0.9em;
+  padding: 0.1em 0.3em;
+  border-radius: 0.2em;
+  line-height: 1;
+}
+.rightAside .inner .tarLabel span:first-of-type.inline {
+  background: magenta;
+}
+.rightAside .inner .tarLabel span:first-of-type.block {
+  background: cyan;
+}
+.rightAside .inner .tarLabel span:last-of-type {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rightAside .inner .tarLabel span:last-of-type::before {
+  content: ": ";
+}
+
+.attrForm {
+  padding: 3px;
+}
+.attrForm .item:not(:last-of-type) {
+  margin-bottom: 3px;
+}
+.attrForm .item .body input[type=text] {
+  width: 100%;
+}
+.attrForm .item .body.subs {
+  display: flex;
+  width: 100%;
+  border: dashed 1px lightgray;
+}
+.attrForm .item .body.subs .subitem {
+  white-space: nowrap;
+  width: 50%;
+}
+.attrForm .item .body.subs .subitem input {
+  width: calc(100% - 2em);
+}
+.attrForm .item .body {
+  display: flex;
+  gap: px;
+}
+.attrForm .item .body input[type=radio] {
+  display: none;
+}
+.attrForm .item .body input[type=radio] + label {
+  cursor: pointer;
+  border: outset;
+  padding: 0 2px;
+}
+.attrForm .item .body input[type=radio]:checked + label {
+  border: inset;
+}/*# sourceMappingURL=style.module.css.map */

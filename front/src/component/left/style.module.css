@@ -1,0 +1,134 @@
+.leftNav {
+  width: 200px;
+}
+.leftNav .inner {
+  position: sticky;
+  top: 30px;
+  left: 0;
+  max-height: calc(100vh - 30px);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.leftNav .inner::-webkit-scrollbar {
+  display: none;
+}
+
+.wrapTimeline,
+.wrapOutline {
+  max-height: 80vh;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.wrapTimeline::-webkit-scrollbar,
+.wrapOutline::-webkit-scrollbar {
+  display: none;
+}
+
+.ulOutline {
+  margin: 0;
+  padding: 0;
+}
+.ulOutline ul {
+  margin: 0;
+  padding: 0 0 0 0.5rem;
+  list-style-type: none;
+}
+.ulOutline ul li {
+  height: 0;
+  overflow: hidden;
+}
+
+.liItem {
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.liItem > label {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.liItem > label span.type {
+  padding: 0 0.3em;
+  margin-right: 0.2em;
+  font-size: 0.8em;
+  border-radius: 0.2em;
+  color: #555;
+}
+.liItem > label span.type.block {
+  background: cyan;
+}
+.liItem > label span.type.inline {
+  background: magenta;
+}
+.liItem > label span.type.etc {
+  background: lightgray;
+}
+.liItem > label span.txt {
+  cursor: pointer;
+}
+.liItem > label.active span.type {
+  font-weight: bold;
+  color: black;
+}
+.liItem > label.active span.txt {
+  font-weight: bold;
+  text-decoration: underline;
+}
+.liItem.hasChild > label span.type {
+  cursor: pointer;
+}
+.liItem.hasChild > label span.type::before {
+  content: "+";
+}
+.liItem.hasChild.open > label span.type::before {
+  content: "-";
+}
+.liItem.hasChild.open > ul > li {
+  height: unset !important;
+}
+
+.history {
+  display: flex;
+}
+.history button {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  cursor: pointer;
+}
+
+.recordList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.recordList li {
+  padding: 0 3px;
+  margin-bottom: 0.1em;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.recordList.forward {
+  margin-bottom: 10px;
+}
+.recordList.forward li {
+  background: gainsboro;
+}
+.recordList.back li {
+  background: bisque;
+}/*# sourceMappingURL=style.module.css.map */

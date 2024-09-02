@@ -1,0 +1,46 @@
+.attrForm .wrapItem {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+.attrForm .wrapItem input {
+  width: 45%;
+}
+
+.formAttrs .wi,
+.formStyle .wi {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  gap: 2px;
+}
+.formAttrs .wi input,
+.formStyle .wi input {
+  width: 50%;
+}
+
+.formClass .labels {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 2px;
+}
+.formClass .labels label {
+  border-radius: 0.3em;
+  padding: 0 0.3em;
+  word-break: break-all;
+  border: solid 1px lightgray;
+}
+.formClass .labels label button {
+  background: none;
+  border: none;
+  vertical-align: bottom;
+  cursor: pointer;
+}
+.formClass .new {
+  padding: 2px;
+  display: flex;
+}
+.formClass .new input[type=text] {
+  width: 100%;
+}/*# sourceMappingURL=style.module.css.map */

@@ -17,7 +17,7 @@ export const Header = (props: ISetter) => {
     // サーバー側で取りにいかないと cors エラー
     const path = prompt(
       "path to post",
-      "http://localhost:3000/testHtml/e420.html"
+      "http://localhost:5000/static/testHtml/e420.html"
     )?.trim();
     if (path) {
       filer.ImportDoc(path, (post: controller.IPostItem | null) => {

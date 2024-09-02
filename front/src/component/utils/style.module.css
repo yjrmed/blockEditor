@@ -1,0 +1,117 @@
+@charset "UTF-8";
+.fbWrap {
+  border: inset 3px lightgray;
+  display: block;
+}
+.fbWrap .title {
+  padding: 0 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: darkgray;
+  color: white;
+}
+.fbWrap .title button {
+  border: none;
+  background: transparent;
+  color: white;
+  vertical-align: top;
+  cursor: pointer;
+}
+.fbWrap .title button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+.fbWrap .title button.fold:before {
+  content: "↓";
+}
+.fbWrap .title button.hide:before {
+  content: "x";
+}
+.fbWrap .fbContent {
+  padding: 3px 1px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.fbWrap .fbContent::-webkit-scrollbar {
+  display: none;
+}
+.fbWrap.close .title button.fold:before {
+  content: "→";
+}
+.fbWrap.close .fbContent {
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.fbWrap.hide {
+  display: none;
+}
+
+.eaForm {
+  padding: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  gap: 5px;
+}
+.eaForm label {
+  border: solid 1px gray;
+  word-break: break-all;
+  border-radius: 0.3em;
+  padding: 0.1em 0.5em;
+  line-height: 1;
+  background: lightcyan;
+}
+.eaForm button {
+  border: none;
+  background: none;
+  display: inline-block;
+  vertical-align: middle;
+  min-width: 1em;
+  padding: 0;
+  margin-right: 0.3em;
+  cursor: pointer;
+}
+.eaForm button:hover {
+  opacity: 0.8;
+}
+.eaForm input {
+  width: 100%;
+}
+
+.eoForm .item {
+  display: flex;
+}
+.eoForm .item label,
+.eoForm .item button {
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  width: 18px;
+  border: none;
+  background: none;
+}
+.eoForm .item button {
+  cursor: pointer;
+}
+.eoForm .item input[type=text] {
+  width: 20px;
+  flex: 0.5 1 20px;
+}
+.eoForm .item:not(:last-of-type) {
+  margin-bottom: 3px;
+}
+
+.dropDown {
+  display: inline-block;
+  position: relative;
+}
+.dropDown button {
+  cursor: pointer;
+}
+.dropDown button + * {
+  position: absolute;
+  left: 0;
+  top: 100%;
+}/*# sourceMappingURL=style.module.css.map */
