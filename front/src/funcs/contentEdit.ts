@@ -72,12 +72,12 @@ export namespace contentEdit {
           })
         );
 
-        this.sbscTargetEvents
-          .add
-          // fromEvent(this.target, "input").subscribe((e) => {
-          //   // onChange
-          // })
-          ();
+        // this.sbscTargetEvents
+        //   .add
+        //   fromEvent(this.target, "input").subscribe((e) => {
+        //     // onChange
+        //   })
+        //   ();
 
         this.sbscTargetEvents.add(
           fromEvent(this.target, "compositionstart").subscribe((e) => {

@@ -211,7 +211,10 @@ export namespace controller {
   export class FileController {
     public $PostChange: Subject<IPostItem | null> = new Subject();
 
-    private scope: string = "";
+    private scopeID: string = "LayerArticle";
+    get ScopeID(): string {
+      return this.scopeID;
+    }
 
     private _post: IPostItem | null = null;
     get Post(): IPostItem | null {
@@ -245,12 +248,11 @@ export namespace controller {
       const url = new URL("http://localhost:5000/getStyle/");
       const params = new URLSearchParams(url.search);
       params.set("target", _path);
+      params.set("scopeID", this.scopeID);
       url.search = params.toString();
       fetch(url.toString())
         .then((res) => res.json())
         .then((json) => {
-          console.log(json);
-          debugger;
           const link = document.createElement("link");
           link.rel = "stylesheet";
           link.type = "text/css";

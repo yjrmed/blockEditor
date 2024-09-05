@@ -2,6 +2,8 @@ import { useContext, useState } from "react";
 import { FilerContext } from "../../App";
 import styles from "./style.module.scss";
 
+// 記事を再読み込みするとタイトルが変更されない。
+
 export const ArticleTitle = () => {
   const filer = useContext(FilerContext);
   const [title, setTitle] = useState<string>(

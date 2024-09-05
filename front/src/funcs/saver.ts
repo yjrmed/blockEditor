@@ -1,6 +1,9 @@
 import { Subject } from "rxjs";
 import { utilis } from "./utlis";
 
+// TODO: timeline がおかしい
+// contentEdita がおかしい、変換が保存されてしまっている。
+
 export namespace saver {
   export interface CommandRecord {
     id: string;

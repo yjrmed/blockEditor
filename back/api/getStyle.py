@@ -17,7 +17,7 @@ def GetStyle(args, public_path):
             encoding = content_type.split("charset=")[-1]
 
         txtCss = response.content.decode(encoding)
-        txtCss = "@scope (article) {\n" + txtCss + "\n}"
+        txtCss = "@scope (#" + args["scopeID"] + ") {\n" + txtCss + "\n}"
         folder_path = public_path + rootFolderPath
 
         if not os.path.exists(folder_path):

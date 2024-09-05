@@ -48,7 +48,7 @@ function App() {
         <div className={styles.containerFlex}>
           <Nav />
           <div className={styles.containerEdit}>
-            <div ref={layer}></div>
+            <div id={filer.ScopeID} className={styles.layer} ref={layer}></div>
             <PopEditorWrap />
           </div>
           <Aside />

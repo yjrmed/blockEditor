@@ -1,33 +1,36 @@
 @import "./layout";
 
 .App {
-}
+  .layer {
+    all: initial;
+  }
 
-.containerFlex {
-  min-height: calc(100vh - $header_height);
-  display: flex;
+  .containerFlex {
+    min-height: calc(100vh - $header_height);
+    display: flex;
 
-  .containerEdit {
-    position: relative;
-    padding: 10px !important;
-    border: solid 1px gray;
-    flex: 1 calc(100% - 400px);
+    .containerEdit {
+      position: relative;
+      padding: 10px !important;
+      border: solid 1px gray;
+      flex: 1 calc(100% - 400px);
 
-    [contenteditable] {
-      outline: none;
-      // border-top: dashed 1px orangered;
-      // border-bottom: dashed 1px orangered;
-      background-color: whitesmoke;
-      min-height: 1em;
+      [contenteditable] {
+        outline: none;
+        // border-top: dashed 1px orangered;
+        // border-bottom: dashed 1px orangered;
+        background-color: whitesmoke;
+        min-height: 1em;
 
-      // &::after {
-      //   content: "<--end";
-      //   display: block;
-      // }
-    }
+        // &::after {
+        //   content: "<--end";
+        //   display: block;
+        // }
+      }
 
-    article {
-      margin: 0 !important;
+      article {
+        margin: 0 !important;
+      }
     }
   }
 }
