@@ -5,13 +5,13 @@ import styles from "./style.module.scss";
 export const ArticleTitle = () => {
   const filer = useContext(FilerContext);
   const [title, setTitle] = useState<string>(
-    filer.Post ? filer.Post.title : ""
+    filer.Post?.head.title ? filer.Post.head.title : ""
   );
 
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (filer.Post) {
-      filer.Post.title = e.target.value;
-      setTitle(filer.Post.title);
+    if (filer.Post?.head.title) {
+      filer.Post.head.title = e.target.value;
+      setTitle(filer.Post.head.title);
     }
   };
 

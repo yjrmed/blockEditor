@@ -50,6 +50,10 @@ header {
   box-shadow: $boxShadow;
   padding: $default_large_space;
 
+  .origins > label {
+    font-weight: bold;
+  }
+
   ul {
     margin: 0;
     padding: 0;

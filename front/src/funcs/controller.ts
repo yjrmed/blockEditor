@@ -189,63 +189,78 @@ export namespace controller {
   }
 
   export interface IPostItem {
-    title: string;
-    description?: string;
+    head: {
+      url: string;
+      title: string | null;
+      keywords: string | null;
+      description: null;
+      normalization: string[];
+      og: {
+        url: string | null;
+        type: string | null;
+        title: string | null;
+        description: string | null;
+        site_name: string | null;
+        image: string | null;
+      };
+    };
     article: HTMLElement;
+    styles: string[];
   }
 
   export class FileController {
-    private _post: IPostItem | null = null;
+    public $PostChange: Subject<IPostItem | null> = new Subject();
 
+    private scope: string = "";
+
+    private _post: IPostItem | null = null;
     get Post(): IPostItem | null {
       return this._post;
     }
 
-    public async ImportDoc(
-      _path: string,
-      callback: (arg: IPostItem | null) => void
-    ) {
-      const path = new URL(_path);
-      fetch(path.href)
-        .then((response) => response.text())
-        .then((html) => {
+    public async ImportDoc(_path: string) {
+      const url = new URL("http://localhost:5000/getPost/");
+      const params = new URLSearchParams(url.search);
+      params.set("target", _path);
+      url.search = params.toString();
+      fetch(url.toString())
+        .then((res) => res.json())
+        .then((json) => {
           const parser = new DOMParser();
-          const doc = parser.parseFromString(html, "text/html");
-          const article = doc.querySelector(
-            path.hash ? `#${path.hash}` : "article"
-          );
+          const doc = parser.parseFromString(json["body"], "text/html");
+          const article = doc.querySelector("article");
           this._post =
             article instanceof HTMLElement
-              ? { title: doc.title, article: article }
+              ? { head: json["head"], article: article, styles: json["styles"] }
               : null;
-          callback(this._post);
+
+          this.$PostChange.next(this._post);
+        })
+        .catch((e) => {
+          console.error(e);
         });
     }
 
-    public ImportStyle = (path: string, ele?: HTMLElement) => {
-      if (!ele) {
-        ele = document.head;
-      }
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.type = "text/css";
-      link.dataset.wcms = `editor_css_${utilis.GenRandomString()}`;
-      link.href = path;
-      ele.appendChild(link);
-
-      // if (link.sheet) {
-      //   // cors の関係で cssRules にはアクセスできない。
-      // 　サーバー側に要求する際 scope を送って編集して送ってもらう。
-      //   // サーバー側で変更するしかない。
-      //   const scopedRules = Array.from(link.sheet.cssRules)
-      //     .map((rule) => {
-      //       return `@scope (article) { ${rule.cssText} }`;
-      //     })
-      //     .join(" ");
-
-      //   const styleElement = document.createElement("style");
-      //   styleElement.textContent = scopedRules;
-      // }
+    public ImportStyle = (_path: string) => {
+      const url = new URL("http://localhost:5000/getStyle/");
+      const params = new URLSearchParams(url.search);
+      params.set("target", _path);
+      url.search = params.toString();
+      fetch(url.toString())
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json);
+          debugger;
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.type = "text/css";
+          link.dataset.wcms = `editor_css_${utilis.GenRandomString()}`;
+          link.href = json["href"];
+          document.head.appendChild(link);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     };
 
     public GetCurrentStyles(): { href: string; disabled: boolean }[] {

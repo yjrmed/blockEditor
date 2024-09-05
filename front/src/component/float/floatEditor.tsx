@@ -11,19 +11,15 @@ interface IPopPos {
   display: string;
 }
 
-interface IPopBlockEditorProps {
-  RelativeWrap: React.RefObject<HTMLDivElement>;
-}
-
 const hidePos: IPopPos = {
   top: "unset",
   left: "unset",
   display: "none",
 };
 
-export const PopEditorWrap = (props: IPopBlockEditorProps) => {
+export const PopEditorWrap = () => {
   const editor = useContext(EditorContext);
-  const popEditor = useRef(null);
+  const popEditor = useRef<HTMLDivElement>(null);
   const [popPos, setPopPos] = useState<IPopPos>(hidePos);
   const [seleObj, setSeleObj] = useState<sele.ISelectionObj | null>(null);
 
@@ -34,12 +30,25 @@ export const PopEditorWrap = (props: IPopBlockEditorProps) => {
   }, []);
 
   useEffect(() => {
-    if (seleObj?.block && props.RelativeWrap.current) {
-      const wrapRect = props.RelativeWrap?.current.getBoundingClientRect();
+    const wrapArticle = popEditor.current?.parentElement;
+    if (seleObj?.block && wrapArticle) {
+      const wrapRect = wrapArticle.getBoundingClientRect();
       const tarRect = seleObj.block.ele.getBoundingClientRect();
+      const selfRect = popEditor.current.getBoundingClientRect();
+
+      let top = tarRect.top - wrapRect.top;
+      if (top < selfRect.height) {
+        top += tarRect.height + selfRect.height;
+      }
+
+      let left = tarRect.left - wrapRect.left;
+      if (left + selfRect.width > wrapRect.width) {
+        left -= selfRect.width - tarRect.width;
+      }
+
       setPopPos({
-        top: `${tarRect.top - wrapRect.top}px`,
-        left: `${tarRect.left - wrapRect.left}px`,
+        top: `${top}px`,
+        left: `${left}px`,
         display: "block",
       });
     } else {

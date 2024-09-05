@@ -16,10 +16,9 @@ export const EditorContext = createContext<controller.EditController>(
 );
 
 function App() {
+  const [post, setPost] = useState<controller.IPostItem | null>(null);
   const editor = useContext(EditorContext);
   const filer = useContext(FilerContext);
-  const [article, setArticle] = useState<controller.IPostItem | null>(null);
-  const wrapLayer = useRef<HTMLDivElement>(null);
   const layer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,25 +26,30 @@ function App() {
     if (layer.current) {
       editor.Initialization(layer.current);
     }
-  }, []);
 
-  useEffect(() => {
-    if (layer.current && article) {
-      editor.SetArticle(article.article);
-    }
-  }, [article]);
+    const sbsc = filer.$PostChange.subscribe((res) => {
+      setPost(res);
+      if (res?.article) {
+        editor.SetArticle(res.article);
+      }
+    });
+
+    return () => {
+      sbsc.unsubscribe();
+    };
+  }, []);
 
   return (
     <div className={styles.App}>
       <EditorContext.Provider value={editor}>
         <FilerContext.Provider value={filer}>
-          <Header setPost={setArticle} />
+          <Header post={post} />
         </FilerContext.Provider>
         <div className={styles.containerFlex}>
           <Nav />
-          <div ref={wrapLayer} className={styles.containerEdit}>
+          <div className={styles.containerEdit}>
             <div ref={layer}></div>
-            <PopEditorWrap RelativeWrap={wrapLayer} />
+            <PopEditorWrap />
           </div>
           <Aside />
         </div>

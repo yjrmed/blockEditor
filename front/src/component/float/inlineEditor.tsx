@@ -149,7 +149,9 @@ export const InlineEditor = (props: IInlineItem) => {
         />
         <label htmlFor="chk_s">s</label>
 
-        {editor.Inline && <button onClick={stripInlineTag}>strip</button>}
+        {editor.Inline && !editor.Inline.tagInfo.selfClose && (
+          <button onClick={stripInlineTag}>strip</button>
+        )}
       </div>
     </div>
   );

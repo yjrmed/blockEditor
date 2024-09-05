@@ -149,7 +149,6 @@ export const EleStyle = (props: IEleStyle) => {
       })}
       <div className={styles.wi}>
         <input
-          autoFocus
           className="new"
           type="text"
           name="new_key"

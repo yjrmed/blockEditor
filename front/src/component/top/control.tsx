@@ -1,30 +1,31 @@
 import styles from "./style.module.scss";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { EditorContext, FilerContext } from "../../App";
-import { controller } from "../../funcs/controller";
-import DropDown from "../utils/dropdown";
-import { FormStyleSheet } from "./styleSheet";
-import { ArticleTitle } from "./title";
 
-interface ISetter {
-  setPost: React.Dispatch<React.SetStateAction<controller.IPostItem | null>>;
+import { StyleSheet } from "./styleSheet";
+import { ArticleTitle } from "./title";
+import { controller } from "../../funcs/controller";
+
+interface IHeader {
+  post: controller.IPostItem | null;
 }
 
-export const Header = (props: ISetter) => {
+export const Header = (props: IHeader) => {
   const editor = useContext(EditorContext);
   const filer = useContext(FilerContext);
+  const [post, setPost] = useState<controller.IPostItem | null>(null);
+
+  useEffect(() => {
+    setPost(props.post);
+  }, [props]);
+
   const importLayer = () => {
-    // サーバー側で取りにいかないと cors エラー
     const path = prompt(
       "path to post",
-      "http://localhost:5000/static/testHtml/e420.html"
+      "https://directforce.image-w2.jp/DF2022/member/essay/2024/e419.html"
     )?.trim();
     if (path) {
-      filer.ImportDoc(path, (post: controller.IPostItem | null) => {
-        if (post) {
-          props.setPost(post);
-        }
-      });
+      filer.ImportDoc(path);
     }
   };
 
@@ -39,15 +40,8 @@ export const Header = (props: ISetter) => {
     <header className={styles.header}>
       <div className={styles.inner}>
         <button onClick={importLayer}>Import</button>
-        <DropDown className="test">
-          <DropDown.Button txt="StyleSeet" className={styles.dropButton} />
-          <DropDown.Body>
-            <FormStyleSheet />
-          </DropDown.Body>
-        </DropDown>
-
+        <StyleSheet styles={post ? post.styles : []} />
         <div className={styles.title}>{filer.Post && <ArticleTitle />}</div>
-
         <button onClick={exportLayer}>Export</button>
       </div>
     </header>

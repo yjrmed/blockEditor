@@ -3,15 +3,10 @@ import { saver } from "./saver";
 
 export namespace contentEdit {
   export class Editor {
-    constructor(private saver: saver.Saver) {
-      this.endBreakLineSpace.textContent = "\u200B";
-      this.endBreakLineSpace.classList.add("__WORKCLASS__");
-      this.endBreakLineSpace.setAttribute("contenteditable", "false");
-    }
+    constructor(private saver: saver.Saver) {}
 
     private sbscReady: Subscription | null = null;
     private sbscTargetEvents: Subscription | null = null;
-    private endBreakLineSpace: HTMLSpanElement = document.createElement("span");
 
     private target: HTMLElement | null = null;
     get Target(): HTMLElement | null {
@@ -45,11 +40,9 @@ export namespace contentEdit {
       this.sbscReady?.unsubscribe();
       if (this.target) {
         this.sbscTargetEvents?.unsubscribe();
-        this.target?.lastChild?.after(this.endBreakLineSpace);
         this.sbscTargetEvents = new Subscription();
         this.sbscTargetEvents.add(
           fromEvent(this.target, "keydown").subscribe((e) => {
-
             const ke = e as KeyboardEvent;
             if (!ke.ctrlKey) {
               if (ke.key === "Enter") {
@@ -59,21 +52,18 @@ export namespace contentEdit {
                 if (selection && selection.rangeCount > 0) {
                   const range = selection.getRangeAt(0);
                   range.deleteContents();
-                  const br = document.createElement("br");
+                  let br = document.createElement("br");
                   range.insertNode(br);
 
-                  this.saver.Mute(() => {
-                    this.target?.lastChild?.after(this.endBreakLineSpace);
-                  });
+                  if (this.target?.lastElementChild === br) {
+                    br = document.createElement("br");
+                    range.insertNode(br);
+                  }
 
                   const newRange = document.createRange();
-                  if (br.nextElementSibling === this.endBreakLineSpace) {
-                    newRange.setStartAfter(this.endBreakLineSpace);
-                    newRange.setEndAfter(this.endBreakLineSpace);
-                  } else {
-                    newRange.setStartAfter(br);
-                    newRange.setEndAfter(br);
-                  }
+                  newRange.setStartAfter(br);
+                  newRange.setEndAfter(br);
+
                   selection.removeAllRanges();
                   selection.addRange(newRange);
                 }
@@ -82,13 +72,12 @@ export namespace contentEdit {
           })
         );
 
-        this.sbscTargetEvents.add(
-          fromEvent(this.target, "input").subscribe((e) => {
-            this.saver.Mute(() => {
-              this.target?.lastChild?.after(this.endBreakLineSpace);
-            });
-          })
-        );
+        this.sbscTargetEvents
+          .add
+          // fromEvent(this.target, "input").subscribe((e) => {
+          //   // onChange
+          // })
+          ();
 
         this.sbscTargetEvents.add(
           fromEvent(this.target, "compositionstart").subscribe((e) => {
@@ -103,7 +92,6 @@ export namespace contentEdit {
 
         const tar = this.target;
         this.saver.Mute(() => {
-          tar.lastChild?.after(this.endBreakLineSpace);
           tar.setAttribute("contenteditable", "true");
         });
 
@@ -114,8 +102,7 @@ export namespace contentEdit {
     public Close() {
       this.sbscTargetEvents?.unsubscribe();
       this.sbscReady?.unsubscribe();
-      this.saver.Flash()
-      this.endBreakLineSpace.parentElement?.removeChild(this.endBreakLineSpace);
+      this.saver.Flash();
 
       if (this.target) {
         const tar = this.target;
