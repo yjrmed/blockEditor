@@ -188,22 +188,27 @@ export namespace controller {
     }
   }
 
+  export interface IPostOg {
+    url: string | null;
+    type: string | null;
+    title: string | null;
+    description: string | null;
+    site_name: string | null;
+    image: string | null;
+  }
+
+  export interface IPostHead {
+    url: string | null;
+    type: string | null;
+    title: string | null;
+    description: string | null;
+    site_name: string | null;
+    image: string | null;
+    og: IPostOg;
+  }
+
   export interface IPostItem {
-    head: {
-      url: string;
-      title: string | null;
-      keywords: string | null;
-      description: null;
-      normalization: string[];
-      og: {
-        url: string | null;
-        type: string | null;
-        title: string | null;
-        description: string | null;
-        site_name: string | null;
-        image: string | null;
-      };
-    };
+    head: IPostHead;
     article: HTMLElement;
     styles: string[];
   }
@@ -216,9 +221,9 @@ export namespace controller {
       return this.scopeID;
     }
 
-    private _post: IPostItem | null = null;
+    private post: IPostItem | null = null;
     get Post(): IPostItem | null {
-      return this._post;
+      return this.post;
     }
 
     public async ImportDoc(_path: string) {
@@ -232,19 +237,19 @@ export namespace controller {
           const parser = new DOMParser();
           const doc = parser.parseFromString(json["body"], "text/html");
           const article = doc.querySelector("article");
-          this._post =
+          this.post =
             article instanceof HTMLElement
               ? { head: json["head"], article: article, styles: json["styles"] }
               : null;
 
-          this.$PostChange.next(this._post);
+          this.$PostChange.next(this.post);
         })
         .catch((e) => {
           console.error(e);
         });
     }
 
-    public ImportStyle = (_path: string) => {
+    public ImportStyle = (_path: string, callback?: Function) => {
       const url = new URL("http://localhost:5000/getStyle/");
       const params = new URLSearchParams(url.search);
       params.set("target", _path);
@@ -256,9 +261,12 @@ export namespace controller {
           const link = document.createElement("link");
           link.rel = "stylesheet";
           link.type = "text/css";
-          link.dataset.wcms = `editor_css_${utilis.GenRandomString()}`;
+          link.dataset.org = _path;
           link.href = json["href"];
           document.head.appendChild(link);
+          if (callback) {
+            callback();
+          }
         })
         .catch((e) => {
           console.error(e);

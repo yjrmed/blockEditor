@@ -1,29 +1,30 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { FilerContext } from "../../App";
 import styles from "./style.module.scss";
+import { controller } from "../../funcs/controller";
 
-// 記事を再読み込みするとタイトルが変更されない。
+interface IArticleTitle {
+  head: controller.IPostHead;
+}
 
-export const ArticleTitle = () => {
+export const ArticleTitle = (props: IArticleTitle) => {
   const filer = useContext(FilerContext);
-  const [title, setTitle] = useState<string>(
-    filer.Post?.head.title ? filer.Post.head.title : ""
-  );
+  const [title, setTitle] = useState<string | null>(props.head.title);
+
+  useEffect(() => {
+    setTitle(props.head.title);
+  }, [props]);
 
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (filer.Post?.head.title) {
+    if (filer.Post) {
       filer.Post.head.title = e.target.value;
-      setTitle(filer.Post.head.title);
+      setTitle(props.head.title);
     }
   };
 
   return (
-    <>
-      {filer.Post && (
-        <h1 className={styles.articleTitle}>
-          <input type="text" onChange={onChangeTitle} value={title} />
-        </h1>
-      )}
-    </>
+    <h1 className={styles.articleTitle}>
+      <input type="text" onChange={onChangeTitle} value={title ? title : ""} />
+    </h1>
   );
 };

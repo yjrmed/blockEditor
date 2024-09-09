@@ -17,7 +17,7 @@ export const Header = (props: IHeader) => {
 
   useEffect(() => {
     setPost(props.post);
-  }, [props]);
+  }, [props.post]);
 
   const importLayer = () => {
     const path = prompt(
@@ -40,8 +40,14 @@ export const Header = (props: IHeader) => {
     <header className={styles.header}>
       <div className={styles.inner}>
         <button onClick={importLayer}>Import</button>
-        <StyleSheet styles={post ? post.styles : []} />
-        <div className={styles.title}>{filer.Post && <ArticleTitle />}</div>
+        {post && (
+          <>
+            <StyleSheet styles={post.styles} />
+            <div className={styles.title}>
+              <ArticleTitle head={post.head} />
+            </div>
+          </>
+        )}
         <button onClick={exportLayer}>Export</button>
       </div>
     </header>
