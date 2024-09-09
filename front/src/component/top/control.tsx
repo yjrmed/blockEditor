@@ -46,9 +46,9 @@ export const Header = (props: IHeader) => {
             <div className={styles.title}>
               <ArticleTitle head={post.head} />
             </div>
+            <button onClick={exportLayer}>Export</button>
           </>
         )}
-        <button onClick={exportLayer}>Export</button>
       </div>
     </header>
   );
