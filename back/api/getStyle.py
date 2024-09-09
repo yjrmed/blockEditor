@@ -1,6 +1,9 @@
 import requests
 import os
+import re
+from urllib.parse import urljoin
 from utils.web import CreateFilename
+from utils.web import GetAbsolutePath
 
 
 def GetStyle(args, public_path):
@@ -17,7 +20,20 @@ def GetStyle(args, public_path):
             encoding = content_type.split("charset=")[-1]
 
         txtCss = response.content.decode(encoding)
-        txtCss = "@scope (#" + args["scopeID"] + ") {\n" + txtCss + "\n}"
+
+        pattern = re.compile(r'url\(["\']?(?P<url>[^"\')]+)["\']?\)')
+
+        def replace_url(match):
+            relative_url = match.group("url")
+            absolute_url = GetAbsolutePath(relative_url, url)
+            return f'url("{absolute_url}")'
+
+        updated_css_content = pattern.sub(replace_url, txtCss)
+
+        txtCss = "@scope (#" + args["scopeID"] + ") {\n" + updated_css_content + "\n}"
+
+        # image url を変更する必要がる。
+
         folder_path = public_path + rootFolderPath
 
         if not os.path.exists(folder_path):
