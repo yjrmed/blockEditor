@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState, useRef } from "react";
 import { EditorContext } from "../../../App";
 import styles from "../style.module.scss";
 
-// TODO:サイズが変更できない。
-
 interface IImg {
   img: HTMLImageElement;
 }

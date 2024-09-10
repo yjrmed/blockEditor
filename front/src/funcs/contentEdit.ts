@@ -72,24 +72,6 @@ export namespace contentEdit {
           })
         );
 
-        // this.sbscTargetEvents
-        //   .add
-        //   fromEvent(this.target, "input").subscribe((e) => {
-        //     // onChange
-        //   })
-        //   ();
-
-        this.sbscTargetEvents.add(
-          fromEvent(this.target, "compositionstart").subscribe((e) => {
-            this.saver.SetCharge();
-          })
-        );
-        this.sbscTargetEvents.add(
-          fromEvent(this.target, "compositionend").subscribe((e) => {
-            this.saver.Flash();
-          })
-        );
-
         const tar = this.target;
         this.saver.Mute(() => {
           tar.setAttribute("contenteditable", "true");
@@ -102,8 +84,6 @@ export namespace contentEdit {
     public Close() {
       this.sbscTargetEvents?.unsubscribe();
       this.sbscReady?.unsubscribe();
-      this.saver.Flash();
-
       if (this.target) {
         const tar = this.target;
         this.saver.Mute(() => {

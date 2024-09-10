@@ -4,6 +4,8 @@ import { domFuncs } from "../../funcs/htmlDoms";
 import { useContext } from "react";
 import { EditorContext } from "../../App";
 
+// ul li をまただい宣託、b を選択すると分割されてしまう。
+
 interface IInlineItem {
   inline: sele.ISelectItem | null;
 }
