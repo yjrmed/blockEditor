@@ -6,19 +6,19 @@ import { DropDown, DropdownContext } from "../utils/dropdown";
 import { htmlTag, domFuncs } from "../../funcs/htmlDoms";
 
 interface IBlockEditor {
-  so: sele.ISelectionObj | null;
+  block: sele.ISelectItem | null;
 }
 
 export const BlockEditor = (props: IBlockEditor) => {
   const editor = useContext(EditorContext);
 
-  const acArray = props.so?.block
-    ? htmlTag.GetAppendablesBlock(props.so.block.tagInfo)
+  const acArray = props.block
+    ? htmlTag.GetAppendablesBlock(props.block.tagInfo)
     : [];
 
   let ibArray: htmlTag.IHtmlTag[] = [];
-  if (props.so?.block?.ele.parentElement) {
-    const blockParent = htmlTag.GetTagInfo(props.so.block.ele.parentElement);
+  if (props.block?.ele.parentElement) {
+    const blockParent = htmlTag.GetTagInfo(props.block.ele.parentElement);
     if (blockParent) {
       ibArray = htmlTag.GetAppendablesBlock(blockParent);
     }
@@ -78,39 +78,11 @@ export const BlockEditor = (props: IBlockEditor) => {
     }
   };
 
-  const prevBlock = editor.GetNeighborEle(false, {
-    block: true,
-    inline: false,
-  });
-  const nextBlock = editor.GetNeighborEle(true, { block: true, inline: false });
-
   return (
     <>
-      {props.so?.block && (
-        <div className={styles.blockController} tabIndex={-1}>
-          <button
-            className={styles.meta}
-            onClick={(e) => {
-              editor.SetSelect(props.so?.block.ele);
-            }}>
-            {props.so.block.tagInfo.name}
-          </button>
-
-          <button
-            disabled={prevBlock === null}
-            onClick={(e) => {
-              editor.SetSelect(prevBlock);
-            }}>
-            ↑
-          </button>
-
-          <button
-            disabled={nextBlock === null}
-            onClick={(e) => {
-              editor.SetSelect(nextBlock);
-            }}>
-            ↓
-          </button>
+      {props.block && (
+        <div className={styles.blockCon} tabIndex={-1}>
+          <label className={styles.tag}>{props.block.tagInfo.name}</label>
 
           <button onClick={DeleteElement}>del</button>
 

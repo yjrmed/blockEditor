@@ -107,4 +107,8 @@ def parseHtml(soup, url):
         a["href"] = GetAbsolutePath(a.get("href"), url)
         a["disabled"] = "disabled"
 
+    # スクリプトの無効化
+    for script in soup.find_all("script"):
+        script["disabled"] = "disabled"
+
     return {"head": _head, "body": soup.body.prettify(), "styles": links}

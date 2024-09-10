@@ -32,8 +32,6 @@ def GetStyle(args, public_path):
 
         txtCss = "@scope (#" + args["scopeID"] + ") {\n" + updated_css_content + "\n}"
 
-        # image url を変更する必要がる。
-
         folder_path = public_path + rootFolderPath
 
         if not os.path.exists(folder_path):

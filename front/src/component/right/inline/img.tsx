@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { EditorContext } from "../../../App";
 import styles from "../style.module.scss";
-import { Subscription } from "rxjs";
+
+// TODO:サイズが変更できない。
 
 interface IImg {
   img: HTMLImageElement;

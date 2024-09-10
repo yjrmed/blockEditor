@@ -3,6 +3,8 @@ import { EditorContext } from "../../App";
 import styles from "./style.module.scss";
 import { BlockEditor } from "./blockController";
 import { InlineEditor } from "./inlineEditor";
+import { MoveController } from "./moveCon";
+import { RangeEditor } from "./rangeEditor";
 import { sele } from "../../funcs/selector";
 
 interface IPopPos {
@@ -57,15 +59,21 @@ export const PopEditorWrap = () => {
   }, [seleObj?.block]);
 
   return (
-    <div
-      ref={popEditor}
-      style={popPos}
-      className={styles.blockEditor}
-      tabIndex={-1}>
-      <div className="inner">
-        <BlockEditor so={seleObj} />
-        <InlineEditor so={seleObj} />
-      </div>
-    </div>
+    <>
+      {seleObj && (
+        <div
+          ref={popEditor}
+          style={popPos}
+          className={styles.blockEditor}
+          tabIndex={-1}>
+          <div className="inner">
+            <MoveController />
+            <BlockEditor block={seleObj.block} />
+            <InlineEditor inline={seleObj.Inline} />
+            <RangeEditor sele={seleObj.selection} />
+          </div>
+        </div>
+      )}
+    </>
   );
 };
