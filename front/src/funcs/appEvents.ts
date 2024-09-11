@@ -5,7 +5,9 @@ export namespace appEvents {
   export class AppEvent {
     constructor(private editor: controller.EditController) {
       window.removeEventListener("keydown", this.handleKeyDown);
-      window.addEventListener("keydown", this.handleKeyDown);
+      window.addEventListener("keydown", this.handleKeyDown, {
+        passive: false,
+      });
 
       // window.removeEventListener("wheel", this.mouseWheel);
       // window.addEventListener("wheel", this.mouseWheel, { passive: false });

@@ -70,9 +70,9 @@ export namespace contentEdit {
               } else if (ke.key === "Backspace") {
                 if (this.target.textContent === "") {
                   const prev = this.target.previousElementSibling;
+                  const blank = this.target;
                   if (prev) {
                     const selection = window.getSelection();
-                    const blank = this.target;
                     if (selection) {
                       const range = document.createRange();
                       range.selectNodeContents(prev);
@@ -81,9 +81,9 @@ export namespace contentEdit {
                       selection.addRange(range);
                       this.Target = prev as HTMLElement;
                       this.Open();
-                      blank.remove();
                     }
                   }
+                  blank.remove();
                 }
               }
             }
