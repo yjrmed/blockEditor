@@ -44,7 +44,7 @@ export namespace contentEdit {
         this.sbscTargetEvents.add(
           fromEvent(this.target, "keydown").subscribe((e) => {
             const ke = e as KeyboardEvent;
-            if (!ke.ctrlKey) {
+            if (!ke.ctrlKey && this.target) {
               if (ke.key === "Enter") {
                 ke.preventDefault();
                 ke.stopPropagation();
@@ -55,7 +55,7 @@ export namespace contentEdit {
                   let br = document.createElement("br");
                   range.insertNode(br);
 
-                  if (this.target?.lastElementChild === br) {
+                  if (this.target.lastElementChild === br) {
                     br = document.createElement("br");
                     range.insertNode(br);
                   }
@@ -66,6 +66,24 @@ export namespace contentEdit {
 
                   selection.removeAllRanges();
                   selection.addRange(newRange);
+                }
+              } else if (ke.key === "Backspace") {
+                if (this.target.textContent === "") {
+                  const prev = this.target.previousElementSibling;
+                  if (prev) {
+                    const selection = window.getSelection();
+                    const blank = this.target;
+                    if (selection) {
+                      const range = document.createRange();
+                      range.selectNodeContents(prev);
+                      range.collapse(false);
+                      selection.removeAllRanges();
+                      selection.addRange(range);
+                      this.Target = prev as HTMLElement;
+                      this.Open();
+                      blank.remove();
+                    }
+                  }
                 }
               }
             }

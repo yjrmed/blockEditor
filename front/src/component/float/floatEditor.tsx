@@ -1,8 +1,8 @@
 import { useContext, useState, useRef, useEffect } from "react";
 import { EditorContext } from "../../App";
 import styles from "./style.module.scss";
-import { BlockEditor } from "./blockController";
-import { InlineEditor } from "./inlineEditor";
+import { BlockEditor } from "./blockCon";
+import { InlineEditor } from "./inlineCon";
 import { MoveController } from "./moveCon";
 import { RangeEditor } from "./rangeEditor";
 import { sele } from "../../funcs/selector";
