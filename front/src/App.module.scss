@@ -1,15 +1,12 @@
 @import "./layout";
 
 .App {
-  .layer {
-    all: initial;
-  }
-
   .containerFlex {
     min-height: calc(100vh - $header_height);
     display: flex;
 
     .containerEdit {
+      // all: initial;
       position: relative;
       padding: 10px !important;
       border: solid 1px gray;
@@ -28,9 +25,16 @@
         // }
       }
 
-      article {
-        margin: 0 !important;
-      }
+      // overflow: hidden;
+      // contain: layout;
+
+        .layer {
+          all: initial;
+          article {
+            margin: 0 !important;
+          }
+        }
+      
     }
   }
 }

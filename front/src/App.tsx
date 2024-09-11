@@ -15,16 +15,22 @@ export const EditorContext = createContext<controller.EditController>(
   new controller.EditController()
 );
 
+// export const ViewerContext = createContext<controller.ViewController>(
+//   new controller.ViewController()
+// );
+
 function App() {
   const [post, setPost] = useState<controller.IPostItem | null>(null);
   const editor = useContext(EditorContext);
   const filer = useContext(FilerContext);
+  // const viewer = useContext(ViewerContext);
   const layer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    new appEvents.AppKeyEvent(editor);
+    new appEvents.AppEvent(editor);
     if (layer.current) {
       editor.Initialization(layer.current);
+      // viewer.Initialization(layer.current);
     }
 
     const sbsc = filer.$PostChange.subscribe((res) => {

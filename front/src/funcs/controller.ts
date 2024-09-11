@@ -296,4 +296,35 @@ export namespace controller {
       }, 0);
     }
   }
+
+  export class ViewController {
+    // 可能であればしていく。
+    // ariticle を absolute にして、スクロール、イベントで top, left を設定させる必要がある。
+    // 基本的なスクロールは使用できなくなる。
+    public Initialization(_layer: HTMLElement) {
+      this.layer = _layer;
+    }
+
+    private layer: HTMLElement | null = null;
+    private scale: number = 1.0;
+    private point: { x: number; y: number } = { x: 0, y: 0 };
+
+    public Event(e: WheelEvent) {
+      console.log(e);
+      const direction = e.deltaY / Math.abs(e.deltaY);
+      this.Scale(this.scale + direction * 0.05);
+    }
+
+    public Scale = (num: number, pos?: { x: number; y: Number }) => {
+      if (this.layer) {
+        this.scale = num;
+        // this.layer.style.transform = `scale(${this.scale})`;
+
+        if (pos) {
+        }
+      }
+    };
+
+    public Init = () => {};
+  }
 }

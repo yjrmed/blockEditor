@@ -1,17 +1,26 @@
 import { controller } from "./controller";
-
 import { domFuncs } from "./htmlDoms";
 
 export namespace appEvents {
-  export class AppKeyEvent {
+  export class AppEvent {
     constructor(private editor: controller.EditController) {
       window.removeEventListener("keydown", this.handleKeyDown);
       window.addEventListener("keydown", this.handleKeyDown);
+
+      // window.removeEventListener("wheel", this.mouseWheel);
+      // window.addEventListener("wheel", this.mouseWheel, { passive: false });
     }
 
-    private handleKeyDown = (e: KeyboardEvent): void => {
-      // console.log(e);
+    // private mouseWheel = (e: WheelEvent): void => {
+    //   if (e.ctrlKey) {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //     this.viewer.Event(e);
+    //   }
+    // };
 
+    private handleKeyDown = (e: KeyboardEvent): void => {
+      console.log(e);
       if (e.ctrlKey) {
         if (e.key === "ArrowUp") {
           e.stopPropagation();
@@ -68,6 +77,10 @@ export namespace appEvents {
               this.editor.SetSelect(this.editor.Block.ele, true, true);
             }
           }
+        } else if (e.key === "z") {
+          this.editor.SaverHistory(-1);
+        } else if (e.key === "Z") {
+          this.editor.SaverHistory(1);
         }
       } else {
         if (e.key === "Escape") {

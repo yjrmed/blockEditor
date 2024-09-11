@@ -27,6 +27,7 @@ $item_height:1.5rem;
     background-color: $block_col;
     border: solid 1px $border_col;
     border-radius: 3px;
+    padding: 0 0.3em;
     &::after {
       content: " : ";
     }
@@ -53,6 +54,7 @@ $item_height:1.5rem;
     background-color: $inline_col;
     border: solid 1px $border_col;
     border-radius: 3px;
+    padding: 0 0.3em;
     &::after {
       content: " : ";
     }

@@ -1,10 +1,8 @@
 import { sele } from "../../funcs/selector";
 import styles from "./style.module.scss";
 import { domFuncs } from "../../funcs/htmlDoms";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { EditorContext } from "../../App";
-
-// ul li をまただい宣託、b を選択すると分割されてしまう。
 
 interface IInlineItem {
   inline: sele.ISelectItem | null;
@@ -12,10 +10,15 @@ interface IInlineItem {
 
 export const InlineEditor = (props: IInlineItem) => {
   const editor = useContext(EditorContext);
+  const [inline, setInline] = useState<sele.ISelectItem | null>(props.inline);
+
+  useEffect(() => {
+    setInline(props.inline);
+  }, [props]);
 
   const stripInlineTag = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (editor.Inline) {
-      const tar = editor.Inline.ele;
+    if (inline) {
+      const tar = inline.ele;
       const rslt = editor.SaverCommand(() => {
         domFuncs.StripTag(tar);
       }, `Strip tag: ${tar.tagName}`);
@@ -25,12 +28,25 @@ export const InlineEditor = (props: IInlineItem) => {
     }
   };
 
+  const DeleteElement = () => {
+    if (inline) {
+      const tar = inline.ele;
+      const rslt = editor.SaverCommand(() => {
+        props.inline?.ele.remove();
+      }, `Remove ${tar.tagName}`);
+      if (rslt) {
+        editor.ReSelect();
+      }
+    }
+  };
+
   return (
     <>
-      {props.inline && (
+      {inline && (
         <div className={styles.inlineCon} tabIndex={-1}>
-          <label className={styles.tag}>{props.inline.tagInfo.name}</label>
-          {editor.Inline && !editor.Inline.tagInfo.selfClose && (
+          <label className={styles.tag}>{inline.tagInfo.name}</label>
+          <button onClick={DeleteElement}>del</button>
+          {!inline.tagInfo.selfClose && (
             <button onClick={stripInlineTag}>strip</button>
           )}
         </div>

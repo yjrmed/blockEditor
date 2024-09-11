@@ -26,19 +26,21 @@ export namespace saver {
 
     private back: CommandRecord[] = [];
     private forward: CommandRecord[] = [];
-
-    private _charge: boolean = false;
-    private chargeMRs: MutationRecord[][] = [];
-    get IsChanged(): boolean {
-      return this.chargeMRs.length > 0;
-    }
+    private charging: boolean = false;
 
     private observer: MutationObserver = new MutationObserver(
       (ml, observer) => {
-        if (!this._charge) {
-          this.stackBack(ml);
+        this.forward.length = 0;
+        if (this.charging) {
+          if (this.back.length) {
+            const lastCmd = this.back[this.back.length - 1];
+            lastCmd.mrs = lastCmd.mrs.concat(ml);
+          } else {
+            this.back.push({ id: utilis.GenRandomString(), mrs: ml });
+          }
         } else {
-          this.chargeMRs.push(ml);
+          this.back.push({ id: utilis.GenRandomString(), mrs: ml });
+          this.$ObserverSubject.next(ml);
         }
       }
     );
@@ -49,12 +51,6 @@ export namespace saver {
       forward: CommandRecord[];
     } {
       return { back: this.back, forward: this.forward };
-    }
-
-    private stackBack(ml: MutationRecord[]) {
-      this.back.push({ id: utilis.GenRandomString(), mrs: ml });
-      this.forward.length = 0;
-      this.$ObserverSubject.next(ml);
     }
 
     public Command(command: Function, _description?: string): boolean {
@@ -87,25 +83,30 @@ export namespace saver {
       }
     }
 
-    public SetCharge() {
-      this._charge = true;
+    public SetCharge(_description?: string) {
+      if (!this.charging) {
+        this.back.push({
+          id: utilis.GenRandomString(),
+          description: _description,
+          mrs: [],
+        });
+        this.charging = true;
+      }
     }
 
     public Flash(_description?: string) {
-      if (this.chargeMRs.length) {
-        const merged = this.chargeMRs.reduce((accumulator, currentArray) => {
-          return accumulator.concat(currentArray);
-        }, []);
-        this.back.push({
-          id: utilis.GenRandomString(),
-          timestamp: Date.now(),
-          description: _description,
-          mrs: merged,
-        });
-        this.chargeMRs = [];
-        this.$ObserverSubject.next(merged);
+      if (this.charging) {
+        if (this.back.length) {
+          const lastCmd = this.back[this.back.length - 1];
+          if (lastCmd.mrs.length) {
+            lastCmd.description = _description;
+            this.$ObserverSubject.next(lastCmd.mrs);
+          } else {
+            this.back.pop();
+          }
+        }
+        this.charging = false;
       }
-      this._charge = false;
     }
 
     public Back(): Node | null {

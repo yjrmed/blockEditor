@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import styles from "./style.module.scss";
 import { sele } from "../../funcs/selector";
 import { EditorContext } from "../../App";
@@ -6,112 +6,103 @@ import { DropDown, DropdownContext } from "../utils/dropdown";
 import { htmlTag, domFuncs } from "../../funcs/htmlDoms";
 
 interface IBlockEditor {
-  block: sele.ISelectItem | null;
+  block: sele.ISelectItem;
 }
 
 export const BlockEditor = (props: IBlockEditor) => {
   const editor = useContext(EditorContext);
+  const [block, setBlock] = useState<sele.ISelectItem>(props.block);
 
-  const acArray = props.block
-    ? htmlTag.GetAppendablesBlock(props.block.tagInfo)
-    : [];
+  useEffect(() => {
+    setBlock(props.block);
+  }, [props]);
 
   let ibArray: htmlTag.IHtmlTag[] = [];
-  if (props.block?.ele.parentElement) {
-    const blockParent = htmlTag.GetTagInfo(props.block.ele.parentElement);
+  if (block.ele.parentElement) {
+    const blockParent = htmlTag.GetTagInfo(block.ele.parentElement);
     if (blockParent) {
       ibArray = htmlTag.GetAppendablesBlock(blockParent);
     }
   }
 
   const DeleteElement = () => {
-    if (editor.Block?.ele) {
-      const tar = editor.Block.ele;
-      const next = editor.Block.ele.nextElementSibling as HTMLElement;
-      const rslt = editor.SaverCommand(() => {
-        tar.remove();
-      }, `Delete ${tar.tagName}`);
-      if (rslt && next) {
-        editor.SetSelect(next);
-      }
+    const tar = block.ele;
+    const next = block.ele.nextElementSibling as HTMLElement;
+    const rslt = editor.SaverCommand(() => {
+      tar.remove();
+    }, `Delete ${tar.tagName}`);
+    if (rslt && next) {
+      editor.SetSelect(next);
     }
   };
 
   const AppendChild = (tn: string) => {
-    if (editor.Block?.ele) {
-      const tar = editor.Block.ele;
-      const newEle = document.createElement(tn);
-      newEle.textContent = `new ${tn} is appended`;
-      const rslt = editor.SaverCommand(() => {
-        tar.appendChild(newEle);
-      }, `Append Child ${tar.tagName}`);
-      if (rslt) {
-        editor.SetSelect(newEle);
-      }
+    const tar = block.ele;
+    const newEle = document.createElement(tn);
+    newEle.textContent = `new ${tn} is appended`;
+    const rslt = editor.SaverCommand(() => {
+      tar.appendChild(newEle);
+    }, `Append Child ${tar.tagName}`);
+    if (rslt) {
+      editor.SetSelect(newEle);
     }
   };
 
   const before = (tn: string) => {
-    if (editor.Block?.ele) {
-      const tar = editor.Block.ele;
-      const newEle = document.createElement(tn);
-      newEle.textContent = `${tn}: Before`;
-      const rslt = editor.SaverCommand(() => {
-        tar.before(newEle);
-      }, `Before ${newEle.tagName}`);
-      if (rslt) {
-        editor.SetSelect(newEle);
-      }
+    const tar = block.ele;
+    const newEle = document.createElement(tn);
+    newEle.textContent = `${tn}: Before`;
+    const rslt = editor.SaverCommand(() => {
+      tar.before(newEle);
+    }, `Before ${newEle.tagName}`);
+    if (rslt) {
+      editor.SetSelect(newEle);
     }
   };
 
   const Duplication = (): void => {
-    if (editor.Block?.ele) {
-      const tar = editor.Block.ele;
-      const newEle = domFuncs.SafeCloenEle(tar);
-      const rslt = editor.SaverCommand(() => {
-        tar.after(newEle);
-      }, `Duplication ${newEle.tagName}`);
-      if (rslt) {
-        editor.SetSelect(newEle);
-      }
+    const tar = block.ele;
+    const newEle = domFuncs.SafeCloenEle(tar);
+    const rslt = editor.SaverCommand(() => {
+      tar.after(newEle);
+    }, `Duplication ${newEle.tagName}`);
+    if (rslt) {
+      editor.SetSelect(newEle);
     }
   };
 
+  const acArray = block ? htmlTag.GetAppendablesBlock(block.tagInfo) : [];
+
   return (
-    <>
-      {props.block && (
-        <div className={styles.blockCon} tabIndex={-1}>
-          <label className={styles.tag}>{props.block.tagInfo.name}</label>
+    <div className={styles.blockCon} tabIndex={-1}>
+      <label className={styles.tag}>{block.tagInfo.name}</label>
 
-          <button onClick={DeleteElement}>del</button>
+      <button onClick={DeleteElement}>del</button>
 
-          <DropDown>
-            <DropDown.Button
-              txt="ac"
-              className={styles.itemBtn}
-              disabled={acArray.length === 0}
-            />
-            <DropDown.Body>
-              <FormSelectTag tags={acArray} onSelect={AppendChild} />
-            </DropDown.Body>
-          </DropDown>
+      <DropDown>
+        <DropDown.Button
+          txt="ac"
+          className={styles.itemBtn}
+          disabled={acArray.length === 0}
+        />
+        <DropDown.Body>
+          <FormSelectTag tags={acArray} onSelect={AppendChild} />
+        </DropDown.Body>
+      </DropDown>
 
-          <DropDown>
-            <DropDown.Button
-              txt="before"
-              className={styles.itemBtn}
-              disabled={ibArray.length === 0}
-            />
-            <DropDown.Body>
-              <FormSelectTag tags={ibArray} onSelect={before} />
-            </DropDown.Body>
-          </DropDown>
+      <DropDown>
+        <DropDown.Button
+          txt="before"
+          className={styles.itemBtn}
+          disabled={ibArray.length === 0}
+        />
+        <DropDown.Body>
+          <FormSelectTag tags={ibArray} onSelect={before} />
+        </DropDown.Body>
+      </DropDown>
 
-          <button onClick={Duplication}>duplication</button>
-        </div>
-      )}
-    </>
+      <button onClick={Duplication}>duplication</button>
+    </div>
   );
 };
 
