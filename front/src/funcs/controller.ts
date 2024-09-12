@@ -66,7 +66,8 @@ export namespace controller {
     private _seleObj: sele.ISelectionObj | null = null;
 
     set SeleObj(val: sele.ISelectionObj | null) {
-      if (val?.block.ele && !this.editor.Target?.contains(val.block.ele)) {
+      // if (val?.block.ele && !this.editor.Target?.contains(val.block.ele)) {
+      if (val?.block.ele) {
         this.editor.Target = val.block.ele;
       }
       this._seleObj = val;
@@ -166,6 +167,15 @@ export namespace controller {
         }
       }
       return null;
+    }
+
+    GetParentEle(ele: HTMLElement): Node | null {
+      this.treeWalker.currentNode = ele;
+      const parent = this.treeWalker.parentNode();
+      if (parent === this.Layer) {
+        return null;
+      }
+      return parent;
     }
 
     public GetCommandList(): {

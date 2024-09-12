@@ -14,7 +14,10 @@ export function ParseChildren(ele: Element, pre: string = ""): IChild[] {
   let gcnt = 0;
   return Array.from(ele.children)
     .filter((child) => {
-      return !child.classList.contains("__WORKCLASS__");
+      return (
+        !child.classList.contains("__WORKCLASS__") &&
+        !(child instanceof HTMLBRElement)
+      );
     })
     .map((child) => {
       return {
@@ -32,20 +35,21 @@ export interface IOutlineItem {
 
 export const OutlineItem = (props: IOutlineItem) => {
   const editor = useContext(EditorContext);
+  const [item, setItem] = useState<IChild>(props.child);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [children, setChildren] = useState<IChild[]>(
-    ParseChildren(props.child.ele, props.child.id)
+    ParseChildren(item.ele, item.id)
   );
 
   useEffect(() => {
     const sbsc = new Subscription();
     sbsc.add(
       editor.$SelectionChange.subscribe((res) => {
-        if (res?.block.ele === props.child.ele) {
+        if (res?.block.ele === item.ele) {
           setIsActive(true);
           setIsOpen(true);
-        } else if (res?.Inline?.ele === props.child.ele) {
+        } else if (res?.Inline?.ele === item.ele) {
           setIsActive(true);
         } else {
           setIsActive(false);
@@ -55,23 +59,27 @@ export const OutlineItem = (props: IOutlineItem) => {
     sbsc.add(
       editor.$ObserverSubject.subscribe((ml) => {
         ml.forEach((m) => {
-          if (m.target === props.child.ele) {
-            setChildren(ParseChildren(props.child.ele, props.child.id));
+          if (m.target === item.ele) {
+            setChildren(ParseChildren(item.ele, item.id));
           } else if (isActive) {
             const found = ml.find((m) => {
               return m.type === "characterData";
             });
             if (found) {
-              setChildren(ParseChildren(props.child.ele, props.child.id));
+              setChildren(ParseChildren(item.ele, item.id));
             }
           }
         });
       })
     );
-    setChildren(ParseChildren(props.child.ele, props.child.id));
+    setChildren(ParseChildren(item.ele, item.id));
     return () => {
       sbsc.unsubscribe();
     };
+  }, []);
+
+  useEffect(() => {
+    setItem(props.child);
   }, [props.child]);
 
   useEffect(() => {
@@ -86,26 +94,29 @@ export const OutlineItem = (props: IOutlineItem) => {
         ${styles.liItem} 
         ${children.length > 0 ? styles.hasChild : ""}
         ${isOpen ? styles.open : ""}`}>
-      <label id={props.child.id} className={`${isActive ? styles.active : ""}`}>
+      <label id={item.id} className={`${isActive ? styles.active : ""}`}>
         <span
           className={`${styles.type} ${
-            props.child.tag?.type ? styles[props.child.tag.type] : ""
+            item.tag?.type ? styles[item.tag.type] : ""
           } `}
           onClick={(e) => {
             setIsOpen(!isOpen);
             if (!isOpen) {
-              editor.SetSelect(props.child.ele as HTMLElement, true);
+              editor.SetSelect(item.ele as HTMLElement, true);
             }
           }}>
-          {`${props.child.tag?.name}`}
+          {`${item.tag?.name}`}
         </span>
         <span
           className={styles.txt}
+          onDoubleClick={(e) => {
+            editor.SetSelect(item.ele as HTMLElement, true, true);
+          }}
           onClick={(e) => {
-            editor.SetSelect(props.child.ele as HTMLElement, true);
+            editor.SetSelect(item.ele as HTMLElement, true);
           }}>
-          {props.child.ele.textContent?.trim()
-            ? props.child.ele.textContent.substring(0, 20)
+          {item.ele.textContent?.trim()
+            ? item.ele.textContent.substring(0, 20)
             : "______"}
         </span>
       </label>

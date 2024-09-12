@@ -1,6 +1,6 @@
 @import "../../layout";
 
-$item_height:1.5rem;
+$item_height: 1.5rem;
 
 .blockEditor {
   position: absolute;
@@ -8,7 +8,7 @@ $item_height:1.5rem;
   user-select: none;
 }
 
-.moveCon{
+.moveCon {
   display: flex;
   align-items: stretch;
   justify-content: left;
@@ -95,39 +95,51 @@ $item_height:1.5rem;
   // }
 }
 
-.rangeCon > div{
+.rangeCon > div {
   display: flex;
   height: $item_height;
   align-items: stretch;
   justify-content: left;
 
   input[type="checkbox"] {
-      display: none;
-      + label {
-        display: inline-block;
-        vertical-align: bottom;
-        font-size: 0.85em;
-        padding: 0.1em 0.3em;
-        line-height: 1.2;
-        border: outset;
-        border-radius: 2px;
-        text-align: center;
-        min-width: 2em;
-        background: whitesmoke;
-        cursor: pointer;
-        &:hover {
-          color: black;
-        }
-      }
-  
-      &:checked {
-        + label {
-          border: inset;
-        }
+    display: none;
+    + label {
+      display: inline-block;
+      vertical-align: bottom;
+      font-size: 0.85em;
+      padding: 0.1em 0.3em;
+      line-height: 1.2;
+      border: outset;
+      border-radius: 2px;
+      text-align: center;
+      min-width: 2em;
+      background: whitesmoke;
+      cursor: pointer;
+      &:hover {
+        color: black;
       }
     }
-}
 
+    &:checked {
+      + label {
+        border: inset;
+      }
+    }
+  }
+
+  .selectInline {
+    background: white;
+    display: flex;
+    flex-wrap: wrap;
+    width: 300px;
+    div {
+      label {
+        flex-grow: 0.3;
+        text-transform: lowercase;
+      }
+    }
+  }
+}
 
 .itemBtn {
   display: flex;

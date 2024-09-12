@@ -1,4 +1,4 @@
-import { domFuncs } from "./htmlDoms";
+import { domFuncs, htmlTag } from "./htmlDoms";
 
 export namespace cmdFunc {
   export function RangeCapTagCommand(
@@ -7,7 +7,7 @@ export namespace cmdFunc {
     startOffset: number,
     end: Node,
     endOffset: number
-  ) {
+  ): HTMLElement {
     const ancestors = domFuncs.GetCommonAncestorElements(start, end);
     if (!ancestors.length) {
       throw new Error("CapRangeTagCommand: not found ancestor");
@@ -20,7 +20,7 @@ export namespace cmdFunc {
     commonAncestorElement.innerHTML = "";
     commonAncestorElement.appendChild(tag);
     const former = domFuncs.SplitElement(tag, start, startOffset);
-    domFuncs.SplitElement(
+    const ret = domFuncs.SplitElement(
       tag,
       end,
       start === end ? endOffset - startOffset : endOffset
@@ -29,6 +29,22 @@ export namespace cmdFunc {
     domFuncs.StripTag(former);
     domFuncs.StripTag(latter);
     domFuncs.OptimizeInlineTag(commonAncestorElement);
+    additionalInline(ret);
+    return ret;
+  }
+
+  function additionalInline(inline: HTMLElement) {
+    if (inline.tagName === "RUBY") {
+      let temp = document.createElement("rp");
+      temp.textContent = "(";
+      inline.appendChild(temp);
+      temp = document.createElement("rt");
+      temp.textContent = "rt";
+      inline.appendChild(temp);
+      temp = document.createElement("rp");
+      temp.textContent = ")";
+      inline.appendChild(temp);
+    }
   }
 
   export function RemoveRangeCapTagCommand(
@@ -55,8 +71,23 @@ export namespace cmdFunc {
     domFuncs.StripTag(middle);
   }
 
-  export function DeleteElement(ele: HTMLElement) {
-    ele.remove();
-  }
+  export function CreateBlock(tagName: string): HTMLElement | undefined {
+    const tagInfo = htmlTag.GetTagInfo(tagName);
+    if (!tagInfo) {
+      return;
+    }
 
+    const ret = document.createElement(tagName);
+    if (ret instanceof HTMLUListElement || ret instanceof HTMLOListElement) {
+      const li = document.createElement("li");
+      ret.appendChild(li);
+    } else if (ret instanceof HTMLDListElement) {
+      let temp = document.createElement("dt");
+      ret.appendChild(temp);
+      temp = document.createElement("dd");
+      ret.appendChild(temp);
+    }
+
+    return ret;
+  }
 }

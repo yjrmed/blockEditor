@@ -4,6 +4,7 @@ import { sele } from "../../funcs/selector";
 import { EditorContext } from "../../App";
 import { DropDown, DropdownContext } from "../utils/dropdown";
 import { htmlTag, domFuncs } from "../../funcs/htmlDoms";
+import { cmdFunc } from "../../funcs/commandFunction";
 
 interface IBlockEditor {
   block: sele.ISelectItem;
@@ -27,25 +28,27 @@ export const BlockEditor = (props: IBlockEditor) => {
 
   const AppendChild = (tn: string) => {
     const tar = block.ele;
-    const newEle = document.createElement(tn);
-    newEle.textContent = `new ${tn} is appended`;
-    const rslt = editor.SaverCommand(() => {
-      tar.appendChild(newEle);
-    }, `Append Child ${tar.tagName}`);
-    if (rslt) {
-      editor.SetSelect(newEle);
+    const newEle = cmdFunc.CreateBlock(tn);
+    if (newEle) {
+      const rslt = editor.SaverCommand(() => {
+        tar.appendChild(newEle);
+      }, `Append Child ${tar.tagName}`);
+      if (rslt) {
+        editor.SetSelect(newEle);
+      }
     }
   };
 
   const before = (tn: string) => {
     const tar = block.ele;
-    const newEle = document.createElement(tn);
-    newEle.textContent = `${tn}: Before`;
-    const rslt = editor.SaverCommand(() => {
-      tar.before(newEle);
-    }, `Before ${newEle.tagName}`);
-    if (rslt) {
-      editor.SetSelect(newEle);
+    const newEle = cmdFunc.CreateBlock(tn);
+    if (newEle) {
+      const rslt = editor.SaverCommand(() => {
+        tar.before(newEle);
+      }, `Before ${newEle.tagName}`);
+      if (rslt) {
+        editor.SetSelect(newEle);
+      }
     }
   };
 
@@ -66,31 +69,31 @@ export const BlockEditor = (props: IBlockEditor) => {
     <div className={styles.blockCon} tabIndex={-1}>
       <label className={styles.tag}>{block.tagInfo.name}</label>
 
-      <button onClick={(e) => editor.RemoveSelect()}>del</button>
+      <button onClick={(e) => editor.RemoveSelect()}>Del</button>
 
       <DropDown>
         <DropDown.Button
-          txt="ac"
+          txt="Ac"
           className={styles.itemBtn}
           disabled={acArray.length === 0}
         />
         <DropDown.Body>
-          <FormSelectTag tags={acArray} onSelect={AppendChild} />
+          <FormSelectBlockTag tags={acArray} onSelect={AppendChild} />
         </DropDown.Body>
       </DropDown>
 
       <DropDown>
         <DropDown.Button
-          txt="before"
+          txt="Before"
           className={styles.itemBtn}
           disabled={ibArray.length === 0}
         />
         <DropDown.Body>
-          <FormSelectTag tags={ibArray} onSelect={before} />
+          <FormSelectBlockTag tags={ibArray} onSelect={before} />
         </DropDown.Body>
       </DropDown>
 
-      <button onClick={Duplication}>duplication</button>
+      <button onClick={Duplication}>Duplication</button>
     </div>
   );
 };
@@ -100,7 +103,7 @@ interface IFormSelectTag {
   onSelect: (ret: string) => void;
 }
 
-const FormSelectTag = (props: IFormSelectTag) => {
+const FormSelectBlockTag = (props: IFormSelectTag) => {
   const dd = useContext(DropdownContext);
   const onClickBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
     props.onSelect((e.target as HTMLButtonElement).value);

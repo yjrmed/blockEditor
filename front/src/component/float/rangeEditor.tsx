@@ -4,10 +4,14 @@ import { EditorContext } from "../../App";
 import { sele } from "../../funcs/selector";
 import { htmlTag } from "../../funcs/htmlDoms";
 import { cmdFunc } from "../../funcs/commandFunction";
-
+import { DropDown, DropdownContext } from "../utils/dropdown";
 interface IRangeEditor {
   sele: Selection;
 }
+
+const inlins = htmlTag.GetInlines(false).filter((inline) => {
+  return !["B", "I", "SUP", "SUB", "U", "S"].includes(inline.name);
+});
 
 export const RangeEditor = (props: IRangeEditor) => {
   const editor = useContext(EditorContext);
@@ -107,6 +111,17 @@ export const RangeEditor = (props: IRangeEditor) => {
                 checked={caps.includes("S")}
               />
               <label htmlFor="chk_s">s</label>
+
+              <DropDown>
+                <DropDown.Button txt="Etc" className={styles.itemBtn} />
+                <DropDown.Body>
+                  <FormSelectInlineTag
+                    tags={inlins}
+                    caps={caps}
+                    onChange={toggleChk}
+                  />
+                </DropDown.Body>
+              </DropDown>
             </div>
           )}
 
@@ -114,5 +129,37 @@ export const RangeEditor = (props: IRangeEditor) => {
         </div>
       )}
     </>
+  );
+};
+
+interface IFormSelectTag {
+  tags: htmlTag.IHtmlTag[];
+  caps: string[];
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const FormSelectInlineTag = (props: IFormSelectTag) => {
+  const dd = useContext(DropdownContext);
+  const _toggleChk = (e: React.ChangeEvent<HTMLInputElement>) => {
+    props.onChange(e);
+    dd.setStateOpen(false);
+  };
+
+  return (
+    <div className={styles.selectInline}>
+      {props.tags?.map((tag, idx) => {
+        return (
+          <div key={`${idx}_${tag.name}`}>
+            <input
+              type="checkbox"
+              id={`chk_${tag.name}`}
+              value={tag.name}
+              onChange={_toggleChk}
+              checked={props.caps.includes(tag.name)}></input>
+            <label htmlFor={`chk_${tag.name}`}>{tag.name}</label>
+          </div>
+        );
+      })}
+    </div>
   );
 };

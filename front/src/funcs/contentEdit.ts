@@ -46,7 +46,7 @@ export namespace contentEdit {
           fromEvent(this.target, "keydown").subscribe((e) => {
             const ke = e as KeyboardEvent;
             if (!ke.ctrlKey && this.target) {
-              console.log(ke.key);
+              // console.log(ke.key);
               if (ke.key === "Enter") {
                 ke.preventDefault();
                 ke.stopPropagation();

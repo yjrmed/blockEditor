@@ -1,3 +1,5 @@
+@import "../../../layout";
+
 .attrForm {
   .wrapItem {
     display: flex;
@@ -49,6 +51,48 @@
     display: flex;
     input[type="text"] {
       width: 100%;
+    }
+  }
+}
+
+.wapTag {
+  .tag {
+    display: inline-block;
+    vertical-align: middle;
+    border: solid 1px $border_col;
+    font-size: 1em;
+    padding: 0.2em 0.5em;
+    border-radius: 0.2em;
+    line-height: 1;
+    text-decoration: none;
+
+    &.inline {
+      background: magenta;
+    }
+
+    &.block {
+      background: cyan;
+    }
+  }
+
+  button {
+    font-size: 0.8em !important;
+    cursor: pointer;
+    & + div::before {
+      content: "┗";
+    }
+  }
+
+  .targetLabel {
+    display: flex;
+
+    span {
+      &::before {
+        content: ": ";
+      }
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }

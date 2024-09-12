@@ -26,10 +26,25 @@ export namespace htmlTag {
       selfClose: false,
     },
     {
+      name: "ADDRESS",
+      type: TagType.block,
+      selfClose: false,
+    },
+    {
       name: "AREA",
       type: TagType.block,
       parentType: ["map"],
       selfClose: true,
+    },
+    {
+      name: "ARTICLE",
+      type: TagType.block,
+      selfClose: false,
+    },
+    {
+      name: "ASIDE",
+      type: TagType.block,
+      selfClose: false,
     },
     {
       name: "B",
@@ -39,6 +54,11 @@ export namespace htmlTag {
     {
       name: "BDO",
       type: TagType.inline,
+      selfClose: false,
+    },
+    {
+      name: "BLOCKQUOTE",
+      type: TagType.block,
       selfClose: false,
     },
     {
@@ -52,6 +72,11 @@ export namespace htmlTag {
       selfClose: false,
     },
     {
+      name: "CANVAS",
+      type: TagType.block,
+      selfClose: false,
+    },
+    {
       name: "CITE",
       type: TagType.inline,
       selfClose: false,
@@ -62,14 +87,24 @@ export namespace htmlTag {
       selfClose: false,
     },
     {
+      name: "DD",
+      type: TagType.block,
+      parentType: ["DL"],
+      selfClose: false,
+    },
+    {
       name: "DFN",
       type: TagType.inline,
       selfClose: false,
     },
     {
-      name: "DD",
+      name: "DIV",
       type: TagType.block,
-      parentType: ["DL"],
+      selfClose: false,
+    },
+    {
+      name: "DL",
+      type: TagType.block,
       selfClose: false,
     },
     {
@@ -84,10 +119,31 @@ export namespace htmlTag {
       selfClose: false,
     },
     {
+      name: "FIELDSET",
+      type: TagType.block,
+      selfClose: false,
+    },
+
+    {
       name: "FIGCAPTION",
       type: TagType.block,
       parentType: ["FIGURE"],
       selfClose: true,
+    },
+    {
+      name: "FIGURE",
+      type: TagType.block,
+      selfClose: false,
+    },
+    {
+      name: "FOOTER",
+      type: TagType.block,
+      selfClose: false,
+    },
+    {
+      name: "FORM",
+      type: TagType.block,
+      selfClose: false,
     },
     {
       name: "I",
@@ -131,6 +187,16 @@ export namespace htmlTag {
     },
     {
       name: "Q",
+      type: TagType.inline,
+      selfClose: false,
+    },
+    {
+      name: "RP",
+      type: TagType.inline,
+      selfClose: false,
+    },
+    {
+      name: "RT",
       type: TagType.inline,
       selfClose: false,
     },
@@ -189,66 +255,7 @@ export namespace htmlTag {
       type: TagType.inline,
       selfClose: false,
     },
-    {
-      name: "VAR",
-      type: TagType.inline,
-      selfClose: false,
-    },
-    {
-      name: "ADDRESS",
-      type: TagType.block,
-      selfClose: false,
-    },
-    {
-      name: "ARTICLE",
-      type: TagType.block,
-      selfClose: false,
-    },
-    {
-      name: "ASIDE",
-      type: TagType.block,
-      selfClose: false,
-    },
-    {
-      name: "BLOCKQUOTE",
-      type: TagType.block,
-      selfClose: false,
-    },
-    {
-      name: "CANVAS",
-      type: TagType.block,
-      selfClose: false,
-    },
-    {
-      name: "DIV",
-      type: TagType.block,
-      selfClose: false,
-    },
-    {
-      name: "DL",
-      type: TagType.block,
-      selfClose: false,
-    },
-    {
-      name: "FIELDSET",
-      type: TagType.block,
-      selfClose: false,
-    },
-    {
-      name: "FIGURE",
-      type: TagType.block,
-      selfClose: false,
-    },
-    {
-      name: "FOOTER",
-      type: TagType.block,
-      selfClose: false,
-    },
-    {
-      name: "FORM",
-      type: TagType.block,
-      selfClose: false,
-    },
+
     {
       name: "H1",
       type: TagType.block,
@@ -328,6 +335,12 @@ export namespace htmlTag {
       selfClose: false,
     },
     {
+      name: "RUBY",
+      type: TagType.inline,
+      selfClose: false,
+      applendableBlocks: ["RP", "RT"],
+    },
+    {
       name: "S",
       type: TagType.inline,
       selfClose: false,
@@ -397,6 +410,11 @@ export namespace htmlTag {
       applendableBlocks: ["LI"],
     },
     {
+      name: "VAR",
+      type: TagType.inline,
+      selfClose: false,
+    },
+    {
       name: "VIDEO",
       type: TagType.block,
       selfClose: false,
@@ -443,10 +461,18 @@ export namespace htmlTag {
     return stackable;
   }
 
-  export function GetInlines(): IHtmlTag[] {
-    return HtmlTags.filter((tag) => {
+  export function GetInlines(selfClose = true): IHtmlTag[] {
+    let ret = HtmlTags.filter((tag) => {
       return tag.type === TagType.inline;
     });
+
+    if (!selfClose) {
+      ret = ret.filter((tag) => {
+        return !tag.selfClose;
+      });
+    }
+
+    return ret;
   }
 
   export function GetAppendablesBlock(tag: IHtmlTag): IHtmlTag[] {

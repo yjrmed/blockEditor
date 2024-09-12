@@ -1,6 +1,5 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { EditorContext } from "../../../App";
-import { sele } from "../../../funcs/selector";
 import styles from "./style.module.scss";
 import { Subscription } from "rxjs";
 
