@@ -28,24 +28,12 @@ export const InlineEditor = (props: IInlineItem) => {
     }
   };
 
-  const DeleteElement = () => {
-    if (inline) {
-      const tar = inline.ele;
-      const rslt = editor.SaverCommand(() => {
-        props.inline?.ele.remove();
-      }, `Remove ${tar.tagName}`);
-      if (rslt) {
-        editor.ReSelect();
-      }
-    }
-  };
-
   return (
     <>
       {inline && (
         <div className={styles.inlineCon} tabIndex={-1}>
           <label className={styles.tag}>{inline.tagInfo.name}</label>
-          <button onClick={DeleteElement}>del</button>
+          <button onClick={(e) => editor.RemoveSelect(true)}>del</button>
           {!inline.tagInfo.selfClose && (
             <button onClick={stripInlineTag}>strip</button>
           )}

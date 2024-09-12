@@ -1,5 +1,6 @@
 import { fromEvent, Subscription } from "rxjs";
 import { saver } from "./saver";
+import { sele } from "./selector";
 
 export namespace contentEdit {
   export class Editor {
@@ -45,6 +46,7 @@ export namespace contentEdit {
           fromEvent(this.target, "keydown").subscribe((e) => {
             const ke = e as KeyboardEvent;
             if (!ke.ctrlKey && this.target) {
+              console.log(ke.key);
               if (ke.key === "Enter") {
                 ke.preventDefault();
                 ke.stopPropagation();
@@ -69,11 +71,13 @@ export namespace contentEdit {
                 }
               } else if (ke.key === "Backspace") {
                 if (this.target.textContent === "") {
+                  ke.preventDefault();
+                  ke.stopPropagation();
                   const prev = this.target.previousElementSibling;
                   const blank = this.target;
-                  if (prev) {
-                    const selection = window.getSelection();
-                    if (selection) {
+                  const selection = window.getSelection();
+                  if (selection) {
+                    if (prev) {
                       const range = document.createRange();
                       range.selectNodeContents(prev);
                       range.collapse(false);
@@ -81,6 +85,8 @@ export namespace contentEdit {
                       selection.addRange(range);
                       this.Target = prev as HTMLElement;
                       this.Open();
+                    } else {
+                      selection.removeAllRanges();
                     }
                   }
                   blank.remove();

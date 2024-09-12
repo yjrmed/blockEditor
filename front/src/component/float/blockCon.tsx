@@ -25,17 +25,6 @@ export const BlockEditor = (props: IBlockEditor) => {
     }
   }
 
-  const DeleteElement = () => {
-    const tar = block.ele;
-    const next = block.ele.nextElementSibling as HTMLElement;
-    const rslt = editor.SaverCommand(() => {
-      tar.remove();
-    }, `Delete ${tar.tagName}`);
-    if (rslt && next) {
-      editor.SetSelect(next);
-    }
-  };
-
   const AppendChild = (tn: string) => {
     const tar = block.ele;
     const newEle = document.createElement(tn);
@@ -77,7 +66,7 @@ export const BlockEditor = (props: IBlockEditor) => {
     <div className={styles.blockCon} tabIndex={-1}>
       <label className={styles.tag}>{block.tagInfo.name}</label>
 
-      <button onClick={DeleteElement}>del</button>
+      <button onClick={(e) => editor.RemoveSelect()}>del</button>
 
       <DropDown>
         <DropDown.Button

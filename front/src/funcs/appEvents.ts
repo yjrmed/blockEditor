@@ -9,20 +9,19 @@ export namespace appEvents {
         passive: false,
       });
 
-      // window.removeEventListener("wheel", this.mouseWheel);
-      // window.addEventListener("wheel", this.mouseWheel, { passive: false });
+      window.removeEventListener("wheel", this.mouseWheel);
+      window.addEventListener("wheel", this.mouseWheel, { passive: false });
     }
 
-    // private mouseWheel = (e: WheelEvent): void => {
-    //   if (e.ctrlKey) {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //     this.viewer.Event(e);
-    //   }
-    // };
+    private mouseWheel = (e: WheelEvent): void => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
 
     private handleKeyDown = (e: KeyboardEvent): void => {
-      console.log(e);
+      // console.log(e);
       if (e.ctrlKey) {
         if (e.key === "ArrowUp") {
           e.stopPropagation();
@@ -79,6 +78,10 @@ export namespace appEvents {
               this.editor.SetSelect(this.editor.Block.ele, true, true);
             }
           }
+        } else if (e.key === "Delete") {
+          e.preventDefault();
+          e.stopPropagation();
+          this.editor.RemoveSelect();
         } else if (e.key === "z") {
           this.editor.SaverHistory(-1);
         } else if (e.key === "Z") {

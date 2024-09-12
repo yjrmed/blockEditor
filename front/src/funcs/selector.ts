@@ -63,17 +63,17 @@ export namespace sele {
       );
     }
 
-    public SetElement(ele: HTMLElement | null | undefined): void {
+    public SetElement(node: Node | null | undefined): void {
       this.Deselect();
-      if (ele && this.layer?.contains(ele)) {
+      if (node && this.layer?.contains(node)) {
         setTimeout(() => {
           const range = document.createRange();
           range.collapse(false);
-          if (ele instanceof HTMLElement) {
-            if (htmlTag.InlineNames.includes(ele.tagName)) {
-              range.selectNodeContents(ele);
+          if (node instanceof HTMLElement) {
+            if (htmlTag.InlineNames.includes(node.tagName)) {
+              range.selectNodeContents(node);
             } else {
-              range.setStart(ele, 0);
+              range.setStart(node, 0);
             }
           }
           this.selection?.addRange(range);

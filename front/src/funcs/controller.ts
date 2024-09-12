@@ -82,12 +82,12 @@ export namespace controller {
     }
 
     public SetSelect = (
-      tar: HTMLElement | null | undefined,
+      tar: Node | null | undefined,
       scroll = true,
       edit = false
     ): void => {
       this.selector.SetElement(tar);
-      if (tar && (scroll || edit)) {
+      if (tar) {
         const onSent = this.$SelectionChange.subscribe((res) => {
           if (scroll && this.Block) {
             utilis.SetViewNode(this.Block.ele, "smooth");
@@ -103,8 +103,24 @@ export namespace controller {
       }
     };
 
-    ReSelect(): void {
-      this.selector.ReSelect();
+    RemoveSelect(inline?: boolean): boolean {
+      let tar: HTMLElement | undefined | null = null;
+      if (inline || this.Inline) {
+        tar = this.Inline?.ele;
+      } else if (this.Block) {
+        tar = this.Block.ele;
+      }
+      if (tar) {
+        const next = tar.nextElementSibling;
+        tar.remove();
+        if (next) {
+          const editting = this.IsEditting;
+          this.SetSelect(next, editting, editting);
+        } else {
+          this.SetSelect(null);
+        }
+      }
+      return Boolean(tar);
     }
 
     GetNeighborEle(forward: boolean, filter?: GetFilter): HTMLElement | null {
@@ -300,7 +316,7 @@ export namespace controller {
   export class ViewController {
     // 可能であればしていく。
     // ariticle を absolute にして、スクロール、イベントで top, left を設定させる必要がある。
-    // 基本的なスクロールは使用できなくなる。
+    // 基本的なスクロールは使用できなくなる。 scrollintoview が動くかも不明
     public Initialization(_layer: HTMLElement) {
       this.layer = _layer;
     }
