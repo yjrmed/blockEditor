@@ -33,9 +33,9 @@ export const InlineEditor = (props: IInlineItem) => {
       {inline && (
         <div className={styles.inlineCon} tabIndex={-1}>
           <label className={styles.tag}>{inline.tagInfo.name}</label>
-          <button onClick={(e) => editor.RemoveSelect(true)}>del</button>
+          <button onClick={(e) => editor.RemoveSelect(true)}>Delete</button>
           {!inline.tagInfo.selfClose && (
-            <button onClick={stripInlineTag}>strip</button>
+            <button onClick={stripInlineTag}>Strip</button>
           )}
         </div>
       )}

@@ -69,11 +69,11 @@ export const BlockEditor = (props: IBlockEditor) => {
     <div className={styles.blockCon} tabIndex={-1}>
       <label className={styles.tag}>{block.tagInfo.name}</label>
 
-      <button onClick={(e) => editor.RemoveSelect()}>Del</button>
+      <button onClick={(e) => editor.RemoveSelect()}>Delete</button>
 
       <DropDown>
         <DropDown.Button
-          txt="Ac"
+          txt="Apend"
           className={styles.itemBtn}
           disabled={acArray.length === 0}
         />
