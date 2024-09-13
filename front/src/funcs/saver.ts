@@ -53,6 +53,10 @@ export namespace saver {
       return { back: this.back, forward: this.forward };
     }
 
+    public get IsDirty(): boolean {
+      return this.back.length > 0 || this.forward.length > 0;
+    }
+
     public Command(command: Function, _description?: string): boolean {
       try {
         command();

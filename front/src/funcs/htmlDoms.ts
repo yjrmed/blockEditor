@@ -63,7 +63,7 @@ export namespace htmlTag {
     },
     {
       name: "BR",
-      type: TagType.inline,
+      type: TagType.etc,
       selfClose: true,
     },
     {

@@ -4,6 +4,9 @@ import { domFuncs } from "./htmlDoms";
 export namespace appEvents {
   export class AppEvent {
     constructor(private editor: controller.EditController) {
+      window.removeEventListener("beforeunload", this.unload);
+      window.addEventListener("beforeunload", this.unload, { passive: false });
+
       window.removeEventListener("keydown", this.handleKeyDown);
       window.addEventListener("keydown", this.handleKeyDown, {
         passive: false,
@@ -12,6 +15,12 @@ export namespace appEvents {
       window.removeEventListener("wheel", this.mouseWheel);
       window.addEventListener("wheel", this.mouseWheel, { passive: false });
     }
+
+    private unload = (e: BeforeUnloadEvent): void => {
+      if (this.editor.IsFileDirty()) {
+        e.preventDefault();
+      }
+    };
 
     private mouseWheel = (e: WheelEvent): void => {
       if (e.ctrlKey) {

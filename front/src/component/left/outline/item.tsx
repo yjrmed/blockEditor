@@ -13,18 +13,16 @@ export interface IChild {
 export function ParseChildren(ele: Element, pre: string = ""): IChild[] {
   let gcnt = 0;
   return Array.from(ele.children)
-    .filter((child) => {
-      return (
-        !child.classList.contains("__WORKCLASS__") &&
-        !(child instanceof HTMLBRElement)
-      );
-    })
+
     .map((child) => {
       return {
         ele: child,
         tag: htmlTag.GetTagInfo(child as HTMLElement),
         id: pre + "_" + (gcnt++).toString(),
       } as IChild;
+    })
+    .filter((child) => {
+      return child.tag && child.tag.type !== htmlTag.TagType.etc;
     });
 }
 

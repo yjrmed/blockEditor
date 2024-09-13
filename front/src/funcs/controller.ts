@@ -185,6 +185,10 @@ export namespace controller {
       return this.saver.CommnadList;
     }
 
+    public IsFileDirty(): boolean {
+      return this.saver.IsDirty;
+    }
+
     public SaverCommand(func: Function, description?: string): boolean {
       return this.saver.Command(func, description);
     }

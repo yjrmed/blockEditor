@@ -11,17 +11,28 @@ export const Timeline = () => {
   }>({ back: [], forward: [] });
 
   useEffect(() => {
-    editor.$ObserverSubject.subscribe((res) => {
+    const sbsc = editor.$ObserverSubject.subscribe((res) => {
       setRecs(editor.GetCommandList());
     });
+    return () => {
+      sbsc.unsubscribe();
+    };
   }, []);
 
   return (
     <>
       <div className={styles.wrapTimeline}>
         <div className={styles.history}>
-          <button onClick={(e) => editor.SaverHistory(-1)}>&#8656;</button>
-          <button onClick={(e) => editor.SaverHistory(1)}>&#8658;</button>
+          <button
+            disabled={recs.back.length === 0}
+            onClick={(e) => editor.SaverHistory(-1)}>
+            &#8656;
+          </button>
+          <button
+            disabled={recs.forward.length === 0}
+            onClick={(e) => editor.SaverHistory(1)}>
+            &#8658;
+          </button>
         </div>
 
         {recs.forward.length > 0 && (
@@ -42,7 +53,9 @@ export const Timeline = () => {
               .slice()
               .reverse()
               .map((rec, idx) => (
-                <li onClick={(e) => editor.SaverHistory(-(idx + 1))} key={rec.id}>
+                <li
+                  onClick={(e) => editor.SaverHistory(-(idx + 1))}
+                  key={rec.id}>
                   {rec.description ? rec.description : "______"}
                 </li>
               ))}

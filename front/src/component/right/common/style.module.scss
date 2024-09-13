@@ -56,6 +56,8 @@
 }
 
 .wapTag {
+
+  padding: $default_space;
   .tag {
     display: inline-block;
     vertical-align: middle;
@@ -77,6 +79,7 @@
 
   button {
     font-size: 0.8em !important;
+    margin-bottom: $default_space;
     cursor: pointer;
     & + div::before {
       content: "┗";
