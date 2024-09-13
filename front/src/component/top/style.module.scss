@@ -46,9 +46,7 @@ header {
 }
 
 .formStyleSheet {
-  background: rgba($color: white, $alpha: 0.8);
-  box-shadow: $boxShadow;
-  padding: $default_large_space;
+  @include droptBackGround;
 
   .origins > label {
     font-weight: bold;

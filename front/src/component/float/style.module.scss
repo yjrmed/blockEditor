@@ -128,13 +128,17 @@ $item_height: 1.5rem;
   }
 
   .selectInline {
-    background: white;
+    @include droptBackGround;
     display: flex;
     flex-wrap: wrap;
     width: 300px;
+    gap: $default_space;
     div {
+      flex-grow: 0.3;
       label {
-        flex-grow: 0.3;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
         text-transform: lowercase;
       }
     }
@@ -153,17 +157,16 @@ $item_height: 1.5rem;
 }
 
 .selectForm {
+  @include droptBackGround;
   width: 350px;
-  background: white;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
-  padding-top: 5px;
+  gap: 3px;
 
   button {
+    flex-grow: 0.2;
     position: unset !important;
-    width: unset;
-    flex: 1 8em;
+    text-transform: lowercase;
     cursor: pointer;
   }
 }

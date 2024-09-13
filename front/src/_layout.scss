@@ -19,3 +19,11 @@ $boxShadow: 2px 3px 5px gray;
     display: none;
   }
 }
+
+@mixin droptBackGround {
+  background: rgba($color: white, $alpha: 0.8);
+  box-shadow: $boxShadow;
+  padding: $default_large_space;
+  border-radius: $default_space;
+}
+

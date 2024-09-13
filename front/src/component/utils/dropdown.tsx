@@ -43,7 +43,9 @@ export const DropDown = (props: DropDownProps) => {
         setStateOpen: setIsOpen,
       }}>
       <div
-        className={`${props.className} ${styles.dropDown}`}
+        className={`${isOpen ? styles.open : ""}  ${props.className} ${
+          styles.dropDown
+        }`}
         ref={dropdownRef}
         onBlur={handleBlur}
         tabIndex={0}>
