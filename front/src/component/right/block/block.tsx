@@ -14,6 +14,7 @@ export const BlockProperty = (prop: IBlock) => {
     <>
       {htmlTag.BlockNames.includes(prop.block.tagInfo.name) && (
         <FoldableBox title="Typography">
+          {/* wrap and add class */}
           <TextAlign block={prop.block.ele} />
           <FontFamily tar={prop.block.ele} />
           <FontWeight tar={prop.block.ele} />

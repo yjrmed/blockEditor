@@ -122,6 +122,7 @@
 
 .history {
   display: flex;
+  margin-bottom: $default_space;
   button {
     user-select: none;
     cursor: pointer;
