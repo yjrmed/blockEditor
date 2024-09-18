@@ -1,6 +1,5 @@
 import { fromEvent, Subscription } from "rxjs";
 import { saver } from "./saver";
-import { sele } from "./selector";
 
 export namespace contentEdit {
   export class Editor {

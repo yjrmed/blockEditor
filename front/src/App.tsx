@@ -45,6 +45,8 @@ function App() {
     };
   }, []);
 
+  console.log("toptop");
+
   return (
     <div className={styles.App}>
       <EditorContext.Provider value={editor}>

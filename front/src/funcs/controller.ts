@@ -35,6 +35,7 @@ export namespace controller {
           layer.appendChild(article);
         });
         this.saver.Initialization(layer);
+        // layer.classList.add("editRoot");
       }
     }
 

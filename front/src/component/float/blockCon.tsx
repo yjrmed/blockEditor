@@ -34,7 +34,11 @@ export const BlockEditor = (props: IBlockEditor) => {
         tar.appendChild(newEle);
       }, `Append Child ${tar.tagName}`);
       if (rslt) {
-        editor.SetSelect(newEle);
+        editor.SetSelect(
+          newEle.firstElementChild ? newEle.firstElementChild : newEle,
+          true,
+          true
+        );
       }
     }
   };
@@ -47,7 +51,11 @@ export const BlockEditor = (props: IBlockEditor) => {
         tar.before(newEle);
       }, `Before ${newEle.tagName}`);
       if (rslt) {
-        editor.SetSelect(newEle);
+        editor.SetSelect(
+          newEle.firstElementChild ? newEle.firstElementChild : newEle,
+          true,
+          true
+        );
       }
     }
   };
