@@ -52,7 +52,6 @@
 }
 
 .attrForm {
-
   .item {
     &:not(:last-of-type) {
       margin-bottom: 3px;
@@ -80,6 +79,38 @@
             width: calc(100% - 2em);
           }
         }
+      }
+    }
+
+    &.inline {
+      display: flex;
+      align-items: flex-start;
+
+      input[type="checkbox"] {
+        cursor: pointer;
+        + label {
+          line-height: 1;
+          cursor: pointer;
+          &::before {
+            content: ": ";
+          }
+        }
+      }
+    }
+
+    &.block {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        line-height: 1;
+        &::after {
+          content: " :";
+        }
+      }
+
+      > select {
+        width: fit-content;
       }
     }
   }

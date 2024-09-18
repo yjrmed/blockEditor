@@ -3,6 +3,7 @@ import { sele } from "../../../funcs/selector";
 import { TextAlign } from "./textAlign";
 import { FontFamily } from "../common/fontFamily";
 import { FontWeight } from "../common/fontWeight";
+import { VideoProp } from "./video";
 import { htmlTag } from "../../../funcs/htmlDoms";
 
 interface IBlock {
@@ -18,6 +19,12 @@ export const BlockProperty = (prop: IBlock) => {
           <TextAlign block={prop.block.ele} />
           <FontFamily tar={prop.block.ele} />
           <FontWeight tar={prop.block.ele} />
+        </FoldableBox>
+      )}
+
+      {prop.block.ele instanceof HTMLVideoElement && (
+        <FoldableBox title="VIDEO">
+          <VideoProp video={prop.block.ele} />
         </FoldableBox>
       )}
     </>

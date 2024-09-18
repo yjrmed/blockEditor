@@ -17,7 +17,7 @@ export const Outline = () => {
           return {
             ele: res.article,
             tag: htmlTag.GetTagInfo(res.article as HTMLElement),
-            id: pre + "0",
+            id: "0",
           };
         } else {
           return null;
@@ -40,8 +40,8 @@ export const Outline = () => {
           if (pre) {
             return {
               ele: pre.ele,
-              tag: htmlTag.GetTagInfo(pre.ele as HTMLElement),
-              id: pre + "0",
+              tag: pre.tag,
+              id: pre.id,
             };
           } else {
             return null;

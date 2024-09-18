@@ -10,9 +10,12 @@ export namespace htmlTag {
     type: TagType;
     selfClose: boolean;
     parentType?: string[];
-    applendableBlocks?: string[];
+    applendables?: string[];
+    NotEditable?: boolean;
     description?: string;
   }
+
+  //TODO: NotEditable で video を編集不可に
 
   const HtmlTags: IHtmlTag[] = [
     {
@@ -321,13 +324,13 @@ export namespace htmlTag {
       name: "OL",
       type: TagType.block,
       selfClose: false,
-      applendableBlocks: ["LI"],
+      applendables: ["LI"],
     },
     {
       name: "P",
       type: TagType.block,
       selfClose: false,
-      applendableBlocks: [],
+      applendables: [],
     },
     {
       name: "PRE",
@@ -338,7 +341,7 @@ export namespace htmlTag {
       name: "RUBY",
       type: TagType.inline,
       selfClose: false,
-      applendableBlocks: ["RP", "RT"],
+      applendables: ["RP", "RT"],
     },
     {
       name: "S",
@@ -355,35 +358,35 @@ export namespace htmlTag {
       name: "TABLE",
       type: TagType.block,
       selfClose: false,
-      applendableBlocks: ["THEAD", "TBODY", "TFOOTER", "CAPTION"],
+      applendables: ["THEAD", "TBODY", "TFOOTER", "CAPTION"],
     },
     {
       name: "THEAD",
       type: TagType.block,
       selfClose: false,
       parentType: ["TABLE"],
-      applendableBlocks: ["TR"],
+      applendables: ["TR"],
     },
     {
       name: "TBODY",
       type: TagType.block,
       selfClose: false,
       parentType: ["TABLE"],
-      applendableBlocks: ["TR"],
+      applendables: ["TR"],
     },
     {
       name: "TFOOTER",
       type: TagType.block,
       selfClose: false,
       parentType: ["TABLE"],
-      applendableBlocks: ["TR"],
+      applendables: ["TR"],
     },
     {
       name: "TR",
       type: TagType.block,
       selfClose: false,
       parentType: ["THEAD", "TBODY", "TFOOTER"],
-      applendableBlocks: ["TH", "TD"],
+      applendables: ["TH", "TD"],
     },
     {
       name: "TD",
@@ -407,7 +410,7 @@ export namespace htmlTag {
       name: "UL",
       type: TagType.block,
       selfClose: false,
-      applendableBlocks: ["LI"],
+      applendables: ["LI"],
     },
     {
       name: "VAR",
@@ -418,6 +421,12 @@ export namespace htmlTag {
       name: "VIDEO",
       type: TagType.block,
       selfClose: false,
+      applendables: ["SOURCE"],
+    },
+    {
+      name: "SOURCE",
+      type: TagType.etc,
+      selfClose: true,
     },
   ];
 
@@ -476,8 +485,8 @@ export namespace htmlTag {
   }
 
   export function GetAppendablesBlock(tag: IHtmlTag): IHtmlTag[] {
-    if (tag.applendableBlocks) {
-      const ats = tag.applendableBlocks;
+    if (tag.applendables) {
+      const ats = tag.applendables;
       return HtmlTags.filter((block) => {
         return ats.includes(block.name);
       });
