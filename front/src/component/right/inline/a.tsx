@@ -77,50 +77,36 @@ export const AProp = (props: IAProp) => {
         e.preventDefault();
         return false;
       }}>
-      <div className={styles.item}>
-        <div className={styles.head}>
-          <label>href</label>
-        </div>
-        <div className={styles.body}>
-          <input
-            type="text"
-            name="href"
-            onChange={muteSet}
-            onBlur={pushSet}
-            value={attrs.href}
-          />
-        </div>
+      <div className={`${styles.item} ${styles.inline}`}>
+        <label className={styles.bf}>href</label>
+        <input
+          type="text"
+          name="href"
+          onChange={muteSet}
+          onBlur={pushSet}
+          value={attrs.href}
+        />
       </div>
-      <div className={styles.item}>
-        <div className={styles.head}>
-          <label htmlFor="select_target">target</label>
-        </div>
-        <div className={styles.body}>
-          <select
-            name="target"
-            id="select_target"
-            onChange={onChangeSelect}
-            value={attrs.target}>
-            <option value="">_self(default)</option>
-            <option value="_blank">_blank</option>
-            <option value="_parent">_parent</option>
-            <option value="_top">_top</option>
-          </select>
-        </div>
+
+      <div className={`${styles.item} ${styles.inline}`}>
+        <label className={styles.bf}>target</label>
+        <select name="target" onChange={onChangeSelect} value={attrs.target}>
+          <option value="">_self(default)</option>
+          <option value="_blank">_blank</option>
+          <option value="_parent">_parent</option>
+          <option value="_top">_top</option>
+        </select>
       </div>
-      <div className={styles.item}>
-        <div className={styles.head}>
-          <label>rel</label>
-        </div>
-        <div className={styles.body}>
-          <input
-            type="text"
-            name="rel"
-            onChange={muteSet}
-            onBlur={pushSet}
-            value={attrs.rel}
-          />
-        </div>
+
+      <div className={`${styles.item} ${styles.inline}`}>
+        <label className={styles.bf}>rel</label>
+        <input
+          type="text"
+          name="rel"
+          onChange={muteSet}
+          onBlur={pushSet}
+          value={attrs.rel}
+        />
       </div>
     </form>
   );

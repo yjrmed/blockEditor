@@ -74,81 +74,68 @@ export const ImgProp = (props: IImg) => {
   return (
     <form
       ref={form}
-      className={`${styles.attrForm} ${styles.img}`}
+      className={styles.attrForm}
       onSubmit={(e) => {
         e.stopPropagation();
         e.preventDefault();
         return false;
       }}>
-      <div className={styles.item}>
-        <div className={styles.head}>
-          <label>src</label>
-        </div>
-        <div className={styles.body}>
-          <input
-            type="text"
-            name="src"
-            onChange={muteSet}
-            onBlur={pushSet}
-            value={attrs.src}
-          />
-        </div>
+      <div className={`${styles.item} ${styles.inline}`}>
+        <label className={styles.bf}>src</label>
+        <input
+          type="text"
+          name="src"
+          onChange={muteSet}
+          onBlur={pushSet}
+          value={attrs.src}
+        />
       </div>
-      <div className={styles.item}>
-        <div className={styles.head}>
-          <label>alt</label>
-        </div>
-        <div className={styles.body}>
-          <input
-            type="text"
-            name="alt"
-            onChange={muteSet}
-            onBlur={pushSet}
-            value={attrs.alt}
-          />
-        </div>
+
+      <div className={`${styles.item} ${styles.inline}`}>
+        <label className={styles.bf}>alt</label>
+        <input
+          type="text"
+          name="alt"
+          onChange={muteSet}
+          onBlur={pushSet}
+          value={attrs.alt}
+        />
       </div>
-      <div className={styles.item}>
-        <div className={styles.head}>
-          <label>size</label>
-        </div>
-        <div className={`${styles.body} ${styles.subs}`}>
-          <div className={styles.subitem}>
-            <label>w:</label>
-            <input
-              type="number"
-              name="width"
-              onChange={muteSet}
-              onBlur={pushSet}
-              value={attrs.width}
-            />
-          </div>
-          <div className={styles.subitem}>
-            <label>h:</label>
-            <input
-              type="number"
-              name="height"
-              onChange={muteSet}
-              onBlur={pushSet}
-              value={attrs.height}
-            />
-          </div>
-        </div>
+
+      <div className={`${styles.item} ${styles.inline}`}>
+        <label className={styles.bf}>width</label>
+        <input
+          type="number"
+          name="width"
+          onChange={muteSet}
+          onBlur={pushSet}
+          value={attrs.width}
+        />
+        <label>px</label>
       </div>
-      <div className={styles.item}>
-        <div className={styles.head}>
-          <label htmlFor="select_loading">loading</label>
-        </div>
-        <div className={styles.body}>
-          <select
-            name="loading"
-            id="select_loading"
-            onChange={onChangeSelect}
-            value={attrs.loading}>
-            <option value="">eager(default)</option>
-            <option value="lazy">lazy</option>
-          </select>
-        </div>
+
+      <div className={`${styles.item} ${styles.inline}`}>
+        <label className={styles.bf}>height</label>
+        <input
+          type="number"
+          name="height"
+          onChange={muteSet}
+          onBlur={pushSet}
+          value={attrs.height}
+        />
+        <label>px</label>
+      </div>
+
+      <div className={`${styles.item} ${styles.inline}`}>
+        <label className={styles.bf}>loading</label>
+        <select
+          name="loading"
+          id="select_loading"
+          onChange={onChangeSelect}
+          value={attrs.loading}>
+          <option value="">eager(default)</option>
+          <option value="lazy">lazy</option>
+        </select>
       </div>
     </form>
   );

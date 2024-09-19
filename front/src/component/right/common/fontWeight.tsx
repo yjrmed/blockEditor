@@ -64,31 +64,27 @@ export const FontWeight = (props: IFontWeightProp) => {
   return (
     <form
       ref={form}
-      className={`${styles.attrForm} ${styles.fontWeight}`}
+      className={styles.attrForm}
       onSubmit={(e) => {
         e.stopPropagation();
         e.preventDefault();
         return false;
       }}>
-      <div className={`${styles.item}`}>
-        <div className={styles.head}>
-          <label>font-weight</label>
-        </div>
-        <div className={styles.body}>
-          <select
-            name="font-weight"
-            value={fontWeight ? fontWeight : ""}
-            onChange={onChangeSelect}>
-            {fontWeights.map((item, idx) => {
-              return (
-                <option key={idx} value={item.val}>
-                  {`${item.val}` + (item.ex ? ` (${item.ex})` : "")}
-                </option>
-              );
-            })}
-            <option value="">(unset)</option>
-          </select>
-        </div>
+      <div className={`${styles.item} ${styles.inline}`}>
+        <label className={styles.bf}>font-weight</label>
+        <select
+          name="font-weight"
+          value={fontWeight ? fontWeight : ""}
+          onChange={onChangeSelect}>
+          {fontWeights.map((item, idx) => {
+            return (
+              <option key={idx} value={item.val}>
+                {`${item.val}` + (item.ex ? ` (${item.ex})` : "")}
+              </option>
+            );
+          })}
+          <option value="">(unset)</option>
+        </select>
       </div>
     </form>
   );

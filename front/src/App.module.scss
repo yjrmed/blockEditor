@@ -11,6 +11,7 @@
       padding: 10px !important;
       border: solid 1px gray;
       flex: 1 calc(100% - 400px);
+      overflow: hidden;
 
       [contenteditable] {
         outline: none;

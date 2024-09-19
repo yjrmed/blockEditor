@@ -84,17 +84,47 @@
 
     &.inline {
       display: flex;
-      align-items: flex-start;
+      flex-wrap: wrap;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 5px;
 
-      input[type="checkbox"] {
-        cursor: pointer;
-        + label {
-          line-height: 1;
+      label {
+        line-height: 1;
+
+        &.bf::after {
+          content: ":";
+        }
+      }
+
+      input {
+        margin-bottom: 0;
+        margin-top: 0;
+        margin-left: 0.2em;
+        margin-right: 0.2em;
+
+        &[type="text"] {
+          width: 10em;
+        }
+
+        &[type="number"] {
+          width: 4em;
+        }
+
+        &[type="checkbox"] {
           cursor: pointer;
-          &::before {
-            content: ": ";
+          + label {
+            line-height: 1;
+            cursor: pointer;
+            &::before {
+              content: ": ";
+            }
           }
         }
+      }
+
+      select {
+        margin-bottom: 0;
       }
     }
 

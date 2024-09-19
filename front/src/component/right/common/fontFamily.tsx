@@ -65,31 +65,27 @@ export const FontFamily = (props: IFontFamilyProp) => {
   return (
     <form
       ref={form}
-      className={`${styles.attrForm} ${styles.text_align}`}
+      className={styles.attrForm}
       onSubmit={(e) => {
         e.stopPropagation();
         e.preventDefault();
         return false;
       }}>
-      <div className={`${styles.item}`}>
-        <div className={styles.head}>
-          <label>font-family</label>
-        </div>
-        <div className={styles.body}>
-          <select
-            name="font-family"
-            value={fontFamily ? fontFamily : ""}
-            onChange={onChangeSelect}>
-            {fontFamilies.map((item, idx) => {
-              return (
-                <option key={idx} value={item}>
-                  {item}
-                </option>
-              );
-            })}
-            <option value="">(unset)</option>
-          </select>
-        </div>
+      <div className={`${styles.item} ${styles.inline}`}>
+        <label className={styles.bf}>font-family</label>
+        <select
+          name="font-family"
+          value={fontFamily ? fontFamily : ""}
+          onChange={onChangeSelect}>
+          {fontFamilies.map((item, idx) => {
+            return (
+              <option key={idx} value={item}>
+                {item}
+              </option>
+            );
+          })}
+          <option value="">(unset)</option>
+        </select>
       </div>
     </form>
   );

@@ -51,31 +51,27 @@ export const TextAlign = (props: ITextAlign) => {
   return (
     <form
       ref={form}
-      className={`${styles.attrForm} ${styles.text_align}`}
+      className={styles.attrForm}
       onSubmit={(e) => {
         e.stopPropagation();
         e.preventDefault();
         return false;
       }}>
-      <div className={`${styles.item}`}>
-        <div className={styles.head}>
-          <label>text-align</label>
-        </div>
-        <div className={styles.body}>
-          <select
-            name="text-align"
-            value={textAlign ? textAlign : ""}
-            onChange={onChangeSelect}>
-            {textAligns.map((item, idx) => {
-              return (
-                <option key={idx} value={item}>
-                  {item}
-                </option>
-              );
-            })}
-            <option value="">(unset)</option>
-          </select>
-        </div>
+      <div className={`${styles.item} ${styles.inline}`}>
+        <label className={styles.bf}>text-align</label>
+        <select
+          name="text-align"
+          value={textAlign ? textAlign : ""}
+          onChange={onChangeSelect}>
+          {textAligns.map((item, idx) => {
+            return (
+              <option key={idx} value={item}>
+                {item}
+              </option>
+            );
+          })}
+          <option value="">(unset)</option>
+        </select>
       </div>
     </form>
   );

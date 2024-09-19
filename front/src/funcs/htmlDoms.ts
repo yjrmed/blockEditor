@@ -421,13 +421,13 @@ export namespace htmlTag {
       name: "VIDEO",
       type: TagType.block,
       selfClose: false,
-      applendables: ["SOURCE"],
+      applendables: [],
     },
-    {
-      name: "SOURCE",
-      type: TagType.etc,
-      selfClose: true,
-    },
+    // {
+    //   name: "SOURCE",
+    //   type: TagType.etc,
+    //   selfClose: true,
+    // },
   ];
 
   export const BlockNames = HtmlTags.filter((tag) => {

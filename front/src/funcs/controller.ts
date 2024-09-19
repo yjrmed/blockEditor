@@ -203,6 +203,8 @@ export namespace controller {
     }
 
     public SaverHistory(step: number): void {
+      this.saver.Flash();
+
       let node: Node | null = null;
       if (step > 0) {
         while (step-- > 0) {
