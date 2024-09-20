@@ -13,6 +13,8 @@ const inlins = htmlTag.GetInlines(false).filter((inline) => {
   return !["B", "I", "SUP", "SUB", "U", "S"].includes(inline.name);
 });
 
+const selfCloseInlines = htmlTag.GetInlines(true);
+
 export const RangeEditor = (props: IRangeEditor) => {
   const editor = useContext(EditorContext);
 
@@ -20,7 +22,7 @@ export const RangeEditor = (props: IRangeEditor) => {
     const cb = e.target as HTMLInputElement;
     const tagInfo = htmlTag.GetTagInfo(cb.value);
     const order = sele.Selector.GetSelectionOrder(props.sele);
-    if (tagInfo && order && !order.isCollapsed) {
+    if (tagInfo && !tagInfo.hasText && order && !order.isCollapsed) {
       if (cb.checked) {
         editor.SaverCommand(() => {
           cmdFunc.RangeCapTagCommand(
@@ -43,6 +45,13 @@ export const RangeEditor = (props: IRangeEditor) => {
         }, `Remove cap of ${tagInfo.name}`);
       }
     }
+  };
+  
+
+  const insertTxtlessEelment = (tagName: string) => {
+    const range = props.sele.getRangeAt(0);
+    const ele = document.createElement(tagName);
+    range.insertNode(ele);
   };
 
   const range = props.sele.getRangeAt(0);
@@ -128,6 +137,20 @@ export const RangeEditor = (props: IRangeEditor) => {
           {selectedNode.nodeType === Node.ELEMENT_NODE && <></>}
         </div>
       )}
+
+      {props.sele.isCollapsed && (
+        <div className={styles.rangeCon} tabIndex={-1}>
+          <DropDown>
+            <DropDown.Button txt="Insert" className={styles.itemBtn} />
+            <DropDown.Body>
+              <FormSelectSelfInlineTag
+                tags={selfCloseInlines}
+                onSelect={insertTxtlessEelment}
+              />
+            </DropDown.Body>
+          </DropDown>
+        </div>
+      )}
     </>
   );
 };
@@ -158,6 +181,34 @@ const FormSelectInlineTag = (props: IFormSelectTag) => {
               checked={props.caps.includes(tag.name)}></input>
             <label htmlFor={`chk_${tag.name}`}>{tag.name}</label>
           </div>
+        );
+      })}
+    </div>
+  );
+};
+
+interface IFormSelectSelfInlineTag {
+  tags: htmlTag.IHtmlTag[];
+  onSelect: (ret: string) => void;
+}
+
+const FormSelectSelfInlineTag = (props: IFormSelectSelfInlineTag) => {
+  const dd = useContext(DropdownContext);
+  const onClickBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
+    props.onSelect((e.target as HTMLButtonElement).value);
+    dd.setStateOpen(false);
+  };
+
+  return (
+    <div className={styles.selectInline2}>
+      {props.tags?.map((tag, idx) => {
+        return (
+          <button
+            key={`${idx}_${tag.name}`}
+            value={tag.name}
+            onClick={onClickBtn}>
+            {tag.name}
+          </button>
         );
       })}
     </div>

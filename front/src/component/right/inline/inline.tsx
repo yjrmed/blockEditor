@@ -4,6 +4,8 @@ import { AProp } from "./a";
 import { ImgProp } from "./img";
 import { FontFamily } from "../common/fontFamily";
 import { FontWeight } from "../common/fontWeight";
+import { htmlTag } from "../../../funcs/htmlDoms";
+import { RubyProp } from "./ruby";
 
 interface IInline {
   inline: sele.ISelectItem;
@@ -20,6 +22,11 @@ export const InlineProperty = (prop: IInline) => {
       {prop.inline.ele instanceof HTMLImageElement && (
         <FoldableBox title="IMG">
           <ImgProp img={prop.inline.ele} />
+        </FoldableBox>
+      )}
+      {prop.inline.tagInfo.name === "RUBY" && (
+        <FoldableBox title="RUBY">
+          <RubyProp ruby={prop.inline.ele} />
         </FoldableBox>
       )}
       <FoldableBox title="Typography">

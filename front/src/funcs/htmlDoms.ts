@@ -8,420 +8,431 @@ export namespace htmlTag {
   export interface IHtmlTag {
     name: string;
     type: TagType;
-    selfClose: boolean;
+    hasText: boolean;
     parentType?: string[];
     applendables?: string[];
-    NotEditable?: boolean;
+    selfClose?: boolean;
     description?: string;
   }
-
-  //TODO: NotEditable で video を編集不可に
 
   const HtmlTags: IHtmlTag[] = [
     {
       name: "A",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "ADDR",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "ADDRESS",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "AREA",
       type: TagType.block,
       parentType: ["map"],
-      selfClose: true,
+      hasText: true,
     },
     {
       name: "ARTICLE",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "ASIDE",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "B",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "BDO",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "BLOCKQUOTE",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "BR",
       type: TagType.etc,
-      selfClose: true,
+      hasText: true,
     },
     {
       name: "BUTTON",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "CANVAS",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "CITE",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "CODE",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "DD",
       type: TagType.block,
       parentType: ["DL"],
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "DFN",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "DIV",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "DL",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "DT",
       type: TagType.block,
       parentType: ["DL"],
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "EM",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "FIELDSET",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
 
     {
       name: "FIGCAPTION",
       type: TagType.block,
       parentType: ["FIGURE"],
-      selfClose: true,
+      hasText: true,
     },
     {
       name: "FIGURE",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "FOOTER",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "FORM",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "I",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "IMG",
       type: TagType.inline,
-      selfClose: true,
+      hasText: true,
     },
     {
       name: "INPUT",
       type: TagType.inline,
-      selfClose: true,
+      hasText: true,
     },
     {
       name: "KBD",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "LABEL",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "MAP",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "OBJECT",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "OUTPUT",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "Q",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "RP",
-      type: TagType.inline,
-      selfClose: false,
+      type: TagType.etc,
+      hasText: false,
     },
     {
       name: "RT",
-      type: TagType.inline,
-      selfClose: false,
+      type: TagType.etc,
+      hasText: false,
     },
     {
       name: "SAMP",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "SCRIPT",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "SELECT",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "SMALL",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "SPAN",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "STRONG",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "SUB",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "SUP",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "TEXTAREA",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "TIME",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "TT",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
 
     {
       name: "H1",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "H2",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "H3",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "H4",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "H5",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "H6",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "HEADER",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "HR",
       type: TagType.block,
-      selfClose: true,
+      hasText: true,
+    },
+    {
+      name: "IFRAME",
+      type: TagType.inline,
+      hasText: true,
     },
     {
       name: "LI",
       type: TagType.block,
       parentType: ["OL", "UL"],
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "MAIN",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "NAV",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "NOSCRIPT",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "OL",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
       applendables: ["LI"],
     },
     {
       name: "P",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
       applendables: [],
     },
     {
       name: "PRE",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "RUBY",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
       applendables: ["RP", "RT"],
     },
     {
       name: "S",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
       description: "strikethrough",
     },
     {
       name: "SECTION",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
+    },
+    {
+      name: "SELECT",
+      type: TagType.inline,
+      hasText: true,
+      applendables: ["OPTION"],
+      selfClose: true,
     },
     {
       name: "TABLE",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
       applendables: ["THEAD", "TBODY", "TFOOTER", "CAPTION"],
     },
     {
       name: "THEAD",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
       parentType: ["TABLE"],
       applendables: ["TR"],
     },
     {
       name: "TBODY",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
       parentType: ["TABLE"],
       applendables: ["TR"],
     },
     {
       name: "TFOOTER",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
       parentType: ["TABLE"],
       applendables: ["TR"],
     },
     {
       name: "TR",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
       parentType: ["THEAD", "TBODY", "TFOOTER"],
       applendables: ["TH", "TD"],
     },
     {
       name: "TD",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
       parentType: ["TR"],
     },
     {
       name: "TH",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
       parentType: ["TR"],
     },
     {
       name: "U",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
       description: "underline",
     },
     {
       name: "UL",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
       applendables: ["LI"],
     },
     {
       name: "VAR",
       type: TagType.inline,
-      selfClose: false,
+      hasText: false,
     },
     {
       name: "VIDEO",
       type: TagType.block,
-      selfClose: false,
+      hasText: false,
       applendables: [],
+      selfClose: true,
     },
     // {
     //   name: "SOURCE",
@@ -477,7 +488,11 @@ export namespace htmlTag {
 
     if (!selfClose) {
       ret = ret.filter((tag) => {
-        return !tag.selfClose;
+        return !tag.hasText;
+      });
+    } else {
+      ret = ret.filter((tag) => {
+        return tag.hasText;
       });
     }
 

@@ -44,3 +44,16 @@ def CreateFilename(text, length=8):
     hash_value = GetShortHash(text, length)
     encoded_hash = urllib.parse.quote(hash_value)
     return encoded_hash
+
+
+def StripDomain(_path) -> str:
+
+    if not _path.startswith("http"):
+        return _path
+
+    parsed_url = urllib.parse.urlparse(_path)
+    stripped_url = urllib.parse.urlunparse(('', '', parsed_url.path, parsed_url.params, parsed_url.query, parsed_url.fragment))
+    return stripped_url
+
+
+

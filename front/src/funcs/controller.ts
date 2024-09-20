@@ -68,7 +68,7 @@ export namespace controller {
 
     set SeleObj(val: sele.ISelectionObj | null) {
       // if (val?.block.ele && !this.editor.Target?.contains(val.block.ele)) {
-      if (val?.block.ele) {
+      if (val?.block.ele && !val.block.tagInfo.selfClose) {
         this.editor.Target = val.block.ele;
       }
       this._seleObj = val;
@@ -241,6 +241,7 @@ export namespace controller {
   }
 
   export interface IPostItem {
+    orgUrl: string;
     head: IPostHead;
     article: HTMLElement;
     styles: string[];
@@ -259,7 +260,7 @@ export namespace controller {
       return this.post;
     }
 
-    public async ImportDoc(_path: string) {
+    public async ImportDoc(_path: string, callback?: Function) {
       const url = new URL("http://localhost:5000/getPost/");
       const params = new URLSearchParams(url.search);
       params.set("target", _path);
@@ -272,10 +273,16 @@ export namespace controller {
           const article = doc.querySelector("article");
           this.post =
             article instanceof HTMLElement
-              ? { head: json["head"], article: article, styles: json["styles"] }
+              ? {
+                  orgUrl: _path,
+                  head: json["head"],
+                  article: article,
+                  styles: json["styles"],
+                }
               : null;
 
           this.$PostChange.next(this.post);
+          callback?.();
         })
         .catch((e) => {
           console.error(e);
@@ -297,13 +304,33 @@ export namespace controller {
           link.dataset.org = _path;
           link.href = json["href"];
           document.head.appendChild(link);
-          if (callback) {
-            callback();
-          }
+          callback?.();
         })
         .catch((e) => {
           console.error(e);
         });
+    };
+
+    public UploadDoc = (callback?: Function) => {
+      if (this.post) {
+        const obj = {
+          orgUrl: this.post.orgUrl,
+          article: this.post.article.outerHTML,
+        };
+        const url = new URL("http://localhost:5000/upload/");
+        fetch(url.toString(), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(obj),
+        })
+          .then((res) => res.json())
+          .then((json) => {})
+          .finally(() => {
+            callback?.();
+          });
+      }
     };
 
     public GetCurrentStyles(): { href: string; disabled: boolean }[] {

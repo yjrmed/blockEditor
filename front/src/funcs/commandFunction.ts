@@ -34,17 +34,17 @@ export namespace cmdFunc {
   }
 
   function additionalInline(inline: HTMLElement) {
-    if (inline.tagName === "RUBY") {
-      let temp = document.createElement("rp");
-      temp.textContent = "(";
-      inline.appendChild(temp);
-      temp = document.createElement("rt");
-      temp.textContent = "rt";
-      inline.appendChild(temp);
-      temp = document.createElement("rp");
-      temp.textContent = ")";
-      inline.appendChild(temp);
-    }
+    // if (inline.tagName === "RUBY") {
+    //   let temp = document.createElement("rp");
+    //   temp.textContent = "(";
+    //   inline.appendChild(temp);
+    //   temp = document.createElement("rt");
+    //   temp.textContent = "rt";
+    //   inline.appendChild(temp);
+    //   temp = document.createElement("rp");
+    //   temp.textContent = ")";
+    //   inline.appendChild(temp);
+    // }
   }
 
   export function RemoveRangeCapTagCommand(

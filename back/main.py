@@ -2,14 +2,14 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, request, render_template
 from flask_cors import CORS
-from api import getPost, getStyle
+from api import getPost, getStyle, uploadPost
 
 load_dotenv()
 
 app = Flask(
     __name__,
-    template_folder=os.environ["REACT_PUBLIC_PATH"],
-    static_folder=os.environ["REACT_PUBLIC_STATIC_PATH"],
+    template_folder=os.environ["FLASK_PUBLIC_PATH"],
+    static_folder=os.environ["FLASK_PUBLIC_STATIC_PATH"],
 )
 
 
@@ -35,7 +35,12 @@ def get_post():
 
 @app.route("/getStyle/", methods=["GET"])
 def get_style():
-    return getStyle.GetStyle(request.args, os.environ["REACT_PUBLIC_PATH"])
+    return getStyle.GetStyle(request.args, os.environ["FLASK_PUBLIC_PATH"])
+
+
+@app.route("/upload/", methods=["POST"])
+def upload_post():
+    return uploadPost.UploadPost(request.get_json())
 
 
 if __name__ == "__main__":

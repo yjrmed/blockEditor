@@ -17,6 +17,7 @@ interface ILinks {
 export const StyleSheet = (props: IStyleSheet) => {
   const filer = useContext(FilerContext);
   const [defaults, setDefaults] = useState<string[]>(props.styles);
+
   useEffect(() => {
     setDefaults(props.styles);
   }, [props.styles]);
@@ -47,6 +48,8 @@ export const StyleSheet = (props: IStyleSheet) => {
     const tar = e.target as HTMLInputElement;
     filer.ImportStyle(tar.value, () => {
       setCurrents(getCurrent());
+
+      // close dropdown
     });
   };
 
@@ -79,7 +82,7 @@ export const StyleSheet = (props: IStyleSheet) => {
   };
 
   return (
-    <DropDown className="test">
+    <DropDown>
       <DropDown.Button txt="StyleSeet" className={styles.dropButton} />
       <DropDown.Body>
         <form

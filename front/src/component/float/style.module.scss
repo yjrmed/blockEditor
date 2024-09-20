@@ -143,6 +143,20 @@ $item_height: 1.5rem;
       }
     }
   }
+
+  .selectInline2 {
+    @include droptBackGround;
+    display: flex;
+    flex-wrap: wrap;
+    width: 300px;
+    gap: $default_space;
+
+    > button {
+      position: unset;
+      left: unset;
+      top: unset;
+    }
+  }
 }
 
 .itemBtn {

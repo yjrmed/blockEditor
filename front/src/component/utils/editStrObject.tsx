@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from "react";
 import styles from "./style.module.scss";
-import { utilis } from "../../funcs/utlis";
 
 export interface IEditStrObj {
   key: string;

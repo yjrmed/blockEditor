@@ -22,10 +22,12 @@ export const Header = (props: IHeader) => {
   const importLayer = () => {
     const path = prompt(
       "path to post",
-      "https://directforce.image-w2.jp/DF2022/member/essay/2024/e419.html"
+      "https://directforce.image-w2.jp/DF2022/member/essay/2024/__e419.html"
     )?.trim();
     if (path) {
-      filer.ImportDoc(path);
+      filer.ImportDoc(path, () => {
+        // close dialog;
+      });
     }
   };
 
@@ -33,6 +35,14 @@ export const Header = (props: IHeader) => {
     if (editor.Layer) {
       editor.SetSelect(null);
       filer.ExportHtml(editor.Layer);
+    }
+  };
+
+  const uploadLayer = () => {
+    if (filer.Post) {
+      filer.UploadDoc(() => {
+        console.log("upload callback");
+      });
     }
   };
 
@@ -46,6 +56,7 @@ export const Header = (props: IHeader) => {
             <div className={styles.title}>
               <ArticleTitle head={post.head} />
             </div>
+            <button onClick={uploadLayer}>Upload</button>
             <button onClick={exportLayer}>Export</button>
           </>
         )}
