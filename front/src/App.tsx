@@ -5,6 +5,7 @@ import { Header } from "./component/top/control";
 import { Nav } from "./component/left/nav";
 import { Aside } from "./component/right/aside";
 import { PopEditorWrap } from "./component/float/floatEditor";
+import { Snackbar, useSnackbar } from "./component/utils/snakbar";
 import { appEvents } from "./funcs/appEvents";
 
 export const FilerContext = createContext<controller.FileController>(
@@ -15,28 +16,26 @@ export const EditorContext = createContext<controller.EditController>(
   new controller.EditController()
 );
 
-// export const ViewerContext = createContext<controller.ViewController>(
-//   new controller.ViewController()
-// );
-
 function App() {
   const [post, setPost] = useState<controller.IPostItem | null>(null);
   const editor = useContext(EditorContext);
   const filer = useContext(FilerContext);
-  // const viewer = useContext(ViewerContext);
   const layer = useRef<HTMLDivElement>(null);
+
+  const { snackbarRef, showSnackbar } = useSnackbar();
 
   useEffect(() => {
     new appEvents.AppEvent(editor);
     if (layer.current) {
       editor.Initialization(layer.current);
-      // viewer.Initialization(layer.current);
+      showSnackbar("initialization");
     }
 
     const sbsc = filer.$PostChange.subscribe((res) => {
       setPost(res);
       if (res?.article) {
         editor.SetArticle(res.article);
+        showSnackbar("load file");
       }
     });
 
@@ -59,6 +58,7 @@ function App() {
           </div>
           <Aside />
         </div>
+        <Snackbar ref={snackbarRef} />
       </EditorContext.Provider>
     </div>
   );

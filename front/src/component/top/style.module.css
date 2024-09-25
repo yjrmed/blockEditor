@@ -26,11 +26,6 @@ header .inner .title h1 {
   margin: 0;
 }
 
-.history {
-  display: flex;
-  align-items: stretch;
-}
-
 .dropButton {
   height: 100%;
 }
@@ -39,6 +34,10 @@ header .inner .title h1 {
   background: rgba(255, 255, 255, 0.8);
   box-shadow: 2px 3px 5px gray;
   padding: 10px;
+  border-radius: 3px;
+}
+.formStyleSheet .origins > label {
+  font-weight: bold;
 }
 .formStyleSheet ul {
   margin: 0;

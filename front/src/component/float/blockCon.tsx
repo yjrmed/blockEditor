@@ -1,18 +1,17 @@
 import { useContext, useState, useEffect } from "react";
 import styles from "./style.module.scss";
-import { sele } from "../../funcs/selector";
 import { EditorContext } from "../../App";
 import { DropDown, DropdownContext } from "../utils/dropdown";
-import { htmlTag, domFuncs } from "../../funcs/htmlDoms";
+import { htmlTag, domFuncs, IDomItem } from "../../funcs/htmlDoms";
 import { cmdFunc } from "../../funcs/commandFunction";
 
 interface IBlockEditor {
-  block: sele.ISelectItem;
+  block: IDomItem;
 }
 
 export const BlockEditor = (props: IBlockEditor) => {
   const editor = useContext(EditorContext);
-  const [block, setBlock] = useState<sele.ISelectItem>(props.block);
+  const [block, setBlock] = useState<IDomItem>(props.block);
 
   useEffect(() => {
     setBlock(props.block);

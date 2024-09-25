@@ -1,11 +1,10 @@
 import { FoldableBox } from "../../utils/foldableBox";
-import { sele } from "../../../funcs/selector";
 import { EleClass } from "./class";
 import { EleStyle } from "./style";
-// import { EleAttrs } from "./attrs";
+import { IDomItem } from "../../../funcs/htmlDoms";
 
 interface ICommonAttribute {
-  item: sele.ISelectItem;
+  item: IDomItem;
 }
 
 export const CommonAttribute = (prop: ICommonAttribute) => {

@@ -1,19 +1,24 @@
-import { sele } from "../../../funcs/selector";
 import { FoldableBox } from "../../utils/foldableBox";
 import { AProp } from "./a";
 import { ImgProp } from "./img";
 import { FontFamily } from "../common/fontFamily";
 import { FontWeight } from "../common/fontWeight";
-import { htmlTag } from "../../../funcs/htmlDoms";
 import { RubyProp } from "./ruby";
+import { IFrameProp } from "./iframe";
+import { IInputProp } from "./input";
+import { IDomItem } from "../../../funcs/htmlDoms";
 
 interface IInline {
-  inline: sele.ISelectItem;
+  inline: IDomItem;
 }
 
 export const InlineProperty = (prop: IInline) => {
   return (
     <>
+      {/* <FoldableBox title="Inline">
+        <div>common Inline</div>
+      </FoldableBox> */}
+
       {prop.inline.ele instanceof HTMLAnchorElement && (
         <FoldableBox title="A">
           <AProp anchor={prop.inline.ele} />
@@ -24,6 +29,16 @@ export const InlineProperty = (prop: IInline) => {
           <ImgProp img={prop.inline.ele} />
         </FoldableBox>
       )}
+      {prop.inline.ele instanceof HTMLIFrameElement && (
+        <FoldableBox title="IMG">
+          <IFrameProp iframe={prop.inline.ele} />
+        </FoldableBox>
+      )}
+      {/* {prop.inline.ele instanceof HTMLInputElement && (
+        <FoldableBox title="INPUT">
+          <IInputProp input={prop.inline.ele} />
+        </FoldableBox>
+      )} */}
       {prop.inline.tagInfo.name === "RUBY" && (
         <FoldableBox title="RUBY">
           <RubyProp ruby={prop.inline.ele} />

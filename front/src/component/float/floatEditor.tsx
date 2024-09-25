@@ -6,6 +6,7 @@ import { InlineEditor } from "./inlineCon";
 import { MoveController } from "./moveCon";
 import { RangeEditor } from "./rangeEditor";
 import { sele } from "../../funcs/selector";
+import { Subscription } from "rxjs";
 
 interface IPopPos {
   top: string;
@@ -24,11 +25,27 @@ export const PopEditorWrap = () => {
   const popEditor = useRef<HTMLDivElement>(null);
   const [popPos, setPopPos] = useState<IPopPos>(hidePos);
   const [seleObj, setSeleObj] = useState<sele.ISelectionObj | null>(null);
+  const [isEditting, setIsEditting] = useState<boolean>(false);
 
   useEffect(() => {
-    editor.$SelectionChange.subscribe((res) => {
-      setSeleObj(res);
-    });
+    const sbsc = new Subscription();
+
+    sbsc.add(
+      editor.$SelectionChange.subscribe((res) => {
+        // console.log(res?.selection);
+        setSeleObj(res);
+      })
+    );
+
+    sbsc.add(
+      editor.EditStateChange.subscribe((res) => {
+        setIsEditting(res);
+      })
+    );
+
+    return () => {
+      sbsc.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
@@ -70,7 +87,7 @@ export const PopEditorWrap = () => {
             <MoveController />
             <BlockEditor block={seleObj.block} />
             <InlineEditor inline={seleObj.Inline} />
-            <RangeEditor sele={seleObj.selection} />
+            {isEditting && <RangeEditor sele={seleObj.selection} />}
           </div>
         </div>
       )}

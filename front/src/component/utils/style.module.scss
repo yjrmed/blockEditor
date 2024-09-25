@@ -144,3 +144,18 @@
     }
   }
 }
+
+.snackbar{
+  position: fixed;
+  bottom: 5%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+
+  p{
+    width: fit-content;
+    background: rgba($color: gray, $alpha: 0.8);
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 1em;
+  }
+}

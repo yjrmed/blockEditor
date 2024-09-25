@@ -107,6 +107,7 @@ export const ImgProp = (props: IImg) => {
         <input
           type="number"
           name="width"
+          min="0"
           onChange={muteSet}
           onBlur={pushSet}
           value={attrs.width}
@@ -119,6 +120,7 @@ export const ImgProp = (props: IImg) => {
         <input
           type="number"
           name="height"
+          min="0"
           onChange={muteSet}
           onBlur={pushSet}
           value={attrs.height}

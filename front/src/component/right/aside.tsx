@@ -7,10 +7,11 @@ import { CommonAttribute } from "./common/common";
 import { ELementTag } from "./common/label";
 import { BlockProperty } from "./block/block";
 import { InlineProperty } from "./inline/inline";
+import { IDomItem } from "../../funcs/htmlDoms";
 
 export const Aside = () => {
   const editor = useContext(EditorContext);
-  const [target, setTarget] = useState<sele.ISelectItem | null>(null);
+  const [target, setTarget] = useState<IDomItem | null>(null);
 
   useEffect(() => {
     const sbsc = editor.$SelectionChange.subscribe((res) => {
@@ -26,7 +27,7 @@ export const Aside = () => {
       {target && (
         <div className={styles.inner}>
           <ELementTag target={target} />
-          <CommonAttribute item={target}></CommonAttribute>
+          <CommonAttribute item={target} />
           {target.tagInfo.type === htmlTag.TagType.inline && (
             <InlineProperty inline={target}></InlineProperty>
           )}

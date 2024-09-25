@@ -1,14 +1,7 @@
 import { Observable, fromEvent, switchMap } from "rxjs";
-import { domFuncs, htmlTag } from "./htmlDoms";
-import { cmdFunc } from "./commandFunction";
-import { utilis } from "./utlis";
+import { htmlTag, IDomItem } from "./htmlDoms";
 
 export namespace sele {
-  export interface ISelectItem {
-    ele: HTMLElement;
-    tagInfo: htmlTag.IHtmlTag;
-  }
-
   export interface ISelectionOrder {
     isCollapsed: boolean;
     startNode: Node;
@@ -18,8 +11,8 @@ export namespace sele {
   }
 
   export interface ISelectionObj {
-    block: ISelectItem;
-    Inline: ISelectItem | null;
+    block: IDomItem;
+    Inline: IDomItem | null;
     selection: Selection;
   }
 
@@ -48,9 +41,6 @@ export namespace sele {
       this.$SelectChange = fromEvent(document, "selectionchange").pipe(
         switchMap(async (event) => {
           const rslt = this.parseSelection();
-
-          // パースした際に BR など編集不可の要素は選択させない。
-
           if (rslt && rslt.block?.ele) {
             return {
               block: rslt.block,
@@ -108,8 +98,8 @@ export namespace sele {
     }
 
     private parseSelection(): {
-      block: ISelectItem | null;
-      inline: ISelectItem | null;
+      block: IDomItem | null;
+      inline: IDomItem | null;
     } {
       // console.log(`anchorNode: ${this.selection.anchorNode}`);
       // console.log(`anchorOffset: ${this.selection.anchorOffset}`);
@@ -120,12 +110,12 @@ export namespace sele {
       const readyResult = (
         node?: Node | undefined
       ): {
-        block: ISelectItem | null;
-        inline: ISelectItem | null;
+        block: IDomItem | null;
+        inline: IDomItem | null;
       } => {
         const _ret: {
-          block: ISelectItem | null;
-          inline: ISelectItem | null;
+          block: IDomItem | null;
+          inline: IDomItem | null;
         } = { block: null, inline: null };
 
         if (!node) {
@@ -138,7 +128,7 @@ export namespace sele {
             _ret.inline = {
               ele: ele,
               tagInfo: htmlTag.GetTagInfo(ele),
-            } as ISelectItem;
+            } as IDomItem;
           }
           let _ele: HTMLElement | null = ele;
           while (_ele && !htmlTag.BlockNames.includes(_ele.tagName)) {
@@ -148,7 +138,7 @@ export namespace sele {
             _ret.block = {
               ele: _ele,
               tagInfo: htmlTag.GetTagInfo(_ele),
-            } as ISelectItem;
+            } as IDomItem;
           }
           return _ret;
         }
@@ -193,6 +183,8 @@ export namespace sele {
 
     public static GetCappedInlineTags(sele: Selection): HTMLElement[] {
       if (sele.anchorNode && sele.focusNode) {
+        // anchor から上の要素に行きfocus を含んでいて inline ならば返す。
+
         const getInline = (_ele: Node): HTMLElement[] => {
           let ele: HTMLElement | null | undefined =
             _ele instanceof HTMLElement ? _ele : _ele.parentElement;
@@ -266,6 +258,15 @@ export namespace sele {
           }
         }
       }
+    }
+
+    public static GetCaretParentElement(
+      sele: Selection
+    ): HTMLElement | undefined {
+      // caretの場合の親などを返す
+      // isCollapsed　or not で条件分岐
+
+      return;
     }
   }
 }

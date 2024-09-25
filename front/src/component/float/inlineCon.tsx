@@ -1,16 +1,15 @@
-import { sele } from "../../funcs/selector";
 import styles from "./style.module.scss";
-import { domFuncs } from "../../funcs/htmlDoms";
+import { domFuncs, IDomItem } from "../../funcs/htmlDoms";
 import { useContext, useState, useEffect } from "react";
 import { EditorContext } from "../../App";
 
 interface IInlineItem {
-  inline: sele.ISelectItem | null;
+  inline: IDomItem | null;
 }
 
 export const InlineEditor = (props: IInlineItem) => {
   const editor = useContext(EditorContext);
-  const [inline, setInline] = useState<sele.ISelectItem | null>(props.inline);
+  const [inline, setInline] = useState<IDomItem | null>(props.inline);
 
   useEffect(() => {
     setInline(props.inline);
@@ -34,7 +33,7 @@ export const InlineEditor = (props: IInlineItem) => {
         <div className={styles.inlineCon} tabIndex={-1}>
           <label className={styles.tag}>{inline.tagInfo.name}</label>
           <button onClick={(e) => editor.RemoveSelect(true)}>Delete</button>
-          {!inline.tagInfo.hasText && (
+          {!inline.tagInfo.noText && (
             <button onClick={stripInlineTag}>Strip</button>
           )}
         </div>

@@ -1,7 +1,7 @@
 import { Subject } from "rxjs";
 import { sele } from "./selector";
 import { saver } from "./saver";
-import { htmlTag } from "./htmlDoms";
+import { htmlTag, IDomItem } from "./htmlDoms";
 import { contentEdit } from "./contentEdit";
 import { utilis } from "./utlis";
 
@@ -35,7 +35,6 @@ export namespace controller {
           layer.appendChild(article);
         });
         this.saver.Initialization(layer);
-        // layer.classList.add("editRoot");
       }
     }
 
@@ -67,20 +66,21 @@ export namespace controller {
     private _seleObj: sele.ISelectionObj | null = null;
 
     set SeleObj(val: sele.ISelectionObj | null) {
-      // if (val?.block.ele && !this.editor.Target?.contains(val.block.ele)) {
-      if (val?.block.ele && !val.block.tagInfo.selfClose) {
-        this.editor.Target = val.block.ele;
-      }
+      this.editor.SetTarget(val?.block);
       this._seleObj = val;
       this.$SelectionChange.next(this._seleObj);
     }
 
-    get Block(): sele.ISelectItem | null {
+    get Block(): IDomItem | null {
       return this._seleObj ? this._seleObj.block : null;
     }
 
-    get Inline(): sele.ISelectItem | null {
+    get Inline(): IDomItem | null {
       return this._seleObj?.Inline ? this._seleObj.Inline : null;
+    }
+
+    get EditStateChange(): Subject<boolean> {
+      return this.editor.$EditStateChange;
     }
 
     public SetSelect = (

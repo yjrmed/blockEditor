@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .attrForm .wrapItem {
   display: flex;
   justify-content: space-around;
@@ -12,24 +13,29 @@
   display: flex;
   justify-content: space-around;
   width: 100%;
-  gap: 2px;
+  gap: 3px;
 }
 .formAttrs .wi input,
 .formStyle .wi input {
   width: 50%;
+}
+.formAttrs .wi:not(:last-of-type),
+.formStyle .wi:not(:last-of-type) {
+  margin-bottom: 3px;
 }
 
 .formClass .labels {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 2px;
+  gap: 3px;
 }
 .formClass .labels label {
   border-radius: 0.3em;
   padding: 0 0.3em;
   word-break: break-all;
   border: solid 1px lightgray;
+  margin-bottom: 3px;
 }
 .formClass .labels label button {
   background: none;
@@ -38,9 +44,47 @@
   cursor: pointer;
 }
 .formClass .new {
-  padding: 2px;
   display: flex;
 }
 .formClass .new input[type=text] {
   width: 100%;
+}
+
+.wapTag {
+  padding: 3px;
+}
+.wapTag .tag {
+  display: inline-block;
+  vertical-align: middle;
+  border: solid 1px lightgray;
+  font-size: 1em;
+  padding: 0.2em 0.3em;
+  border-radius: 0.2em;
+  line-height: 1;
+  text-decoration: none;
+}
+.wapTag .tag.inline {
+  background: magenta;
+}
+.wapTag .tag.block {
+  background: cyan;
+}
+.wapTag button {
+  font-size: 0.8em !important;
+  margin-bottom: 3px;
+  cursor: pointer;
+}
+.wapTag button + div::before {
+  content: "┗";
+}
+.wapTag .targetLabel {
+  display: flex;
+}
+.wapTag .targetLabel span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wapTag .targetLabel span::before {
+  content: " : ";
 }/*# sourceMappingURL=style.module.css.map */

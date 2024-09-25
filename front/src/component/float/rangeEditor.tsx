@@ -22,7 +22,7 @@ export const RangeEditor = (props: IRangeEditor) => {
     const cb = e.target as HTMLInputElement;
     const tagInfo = htmlTag.GetTagInfo(cb.value);
     const order = sele.Selector.GetSelectionOrder(props.sele);
-    if (tagInfo && !tagInfo.hasText && order && !order.isCollapsed) {
+    if (tagInfo && !tagInfo.noText && order && !order.isCollapsed) {
       if (cb.checked) {
         editor.SaverCommand(() => {
           cmdFunc.RangeCapTagCommand(
@@ -46,9 +46,10 @@ export const RangeEditor = (props: IRangeEditor) => {
       }
     }
   };
-  
 
   const insertTxtlessEelment = (tagName: string) => {
+    // 選択テキストノードの親要素が　自己完結タグの場合は無効にさせる。
+
     const range = props.sele.getRangeAt(0);
     const ele = document.createElement(tagName);
     range.insertNode(ele);
@@ -62,6 +63,20 @@ export const RangeEditor = (props: IRangeEditor) => {
 
   return (
     <>
+      {props.sele.isCollapsed && !htmlTag.IsInsertableElement(selectedNode) && (
+        <div className={styles.rangeCon} tabIndex={-1}>
+          <DropDown>
+            <DropDown.Button txt="Insert" className={styles.itemBtn} />
+            <DropDown.Body>
+              <FormSelectSelfInlineTag
+                tags={selfCloseInlines}
+                onSelect={insertTxtlessEelment}
+              />
+            </DropDown.Body>
+          </DropDown>
+        </div>
+      )}
+
       {!props.sele.isCollapsed && (
         <div className={styles.rangeCon} tabIndex={-1}>
           {(selectedNode.nodeType === Node.TEXT_NODE ||
@@ -135,20 +150,6 @@ export const RangeEditor = (props: IRangeEditor) => {
           )}
 
           {selectedNode.nodeType === Node.ELEMENT_NODE && <></>}
-        </div>
-      )}
-
-      {props.sele.isCollapsed && (
-        <div className={styles.rangeCon} tabIndex={-1}>
-          <DropDown>
-            <DropDown.Button txt="Insert" className={styles.itemBtn} />
-            <DropDown.Body>
-              <FormSelectSelfInlineTag
-                tags={selfCloseInlines}
-                onSelect={insertTxtlessEelment}
-              />
-            </DropDown.Body>
-          </DropDown>
         </div>
       )}
     </>

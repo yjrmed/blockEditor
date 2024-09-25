@@ -1,5 +1,6 @@
-import { fromEvent, Subscription } from "rxjs";
+import { fromEvent, Subject, Subscription } from "rxjs";
 import { saver } from "./saver";
+import { htmlTag, IDomItem } from "./htmlDoms";
 
 export namespace contentEdit {
   export class Editor {
@@ -13,24 +14,24 @@ export namespace contentEdit {
       return this.target;
     }
 
-    set Target(val: HTMLElement | null) {
-      if (val) {
-        if (val !== this.target) {
+    public SetTarget(block: IDomItem | undefined) {
+      if (block && !block.tagInfo.selfClose && !block.tagInfo.noText) {
+        if (block.ele !== this.target) {
           this.Close();
-          this.target = val;
-          if (this.target) {
-            this.sbscReady?.unsubscribe();
-            this.sbscReady = fromEvent(this.target, "pointerdown").subscribe(
-              (res) => {
-                this.Open();
-              }
-            );
-          }
+          this.target = block.ele;
+          this.sbscReady?.unsubscribe();
+          this.sbscReady = fromEvent(this.target, "pointerdown").subscribe(
+            (res) => {
+              this.Open();
+            }
+          );
         }
       } else {
         this.Close();
       }
     }
+
+    public $EditStateChange: Subject<boolean> = new Subject();
 
     get IsEditting(): boolean {
       return Boolean(this.target?.getAttribute("contenteditable") === "true");
@@ -82,8 +83,16 @@ export namespace contentEdit {
                       range.collapse(false);
                       selection.removeAllRanges();
                       selection.addRange(range);
-                      this.Target = prev as HTMLElement;
-                      this.Open();
+                      const tagInfo = htmlTag.GetTagInfo(prev as HTMLElement);
+                      if (tagInfo) {
+                        this.SetTarget({
+                          ele: prev as HTMLElement,
+                          tagInfo: tagInfo,
+                        });
+                        this.Open();
+                      } else {
+                        this.Close();
+                      }
                     } else {
                       selection.removeAllRanges();
                     }
@@ -101,6 +110,7 @@ export namespace contentEdit {
         });
 
         this.target.focus();
+        this.$EditStateChange.next(true);
       }
     }
 
@@ -113,6 +123,7 @@ export namespace contentEdit {
           tar.removeAttribute("contenteditable");
         });
         this.target = null;
+        this.$EditStateChange.next(false);
       }
     }
   }

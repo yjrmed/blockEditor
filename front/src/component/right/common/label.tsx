@@ -1,11 +1,11 @@
-import { sele } from "../../../funcs/selector";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { EditorContext } from "../../../App";
 import { htmlTag } from "../../../funcs/htmlDoms";
 import styles from "./style.module.scss";
+import { IDomItem } from "../../../funcs/htmlDoms";
 
 interface IELementTag {
-  target: sele.ISelectItem;
+  target: IDomItem;
 }
 
 export const ELementTag = (props: IELementTag) => {
