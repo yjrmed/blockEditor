@@ -249,6 +249,7 @@ export namespace controller {
 
   export class FileController {
     public $PostChange: Subject<IPostItem | null> = new Subject();
+    public $FilerMessage: Subject<string> = new Subject();
 
     private scopeID: string = "LayerArticle";
     get ScopeID(): string {
@@ -282,6 +283,7 @@ export namespace controller {
               : null;
 
           this.$PostChange.next(this.post);
+          this.$FilerMessage.next("loaded file");
           callback?.();
         })
         .catch((e) => {
@@ -305,6 +307,7 @@ export namespace controller {
           link.href = json["href"];
           document.head.appendChild(link);
           callback?.();
+          this.$FilerMessage.next(`import style ${url}`);
         })
         .catch((e) => {
           console.error(e);
@@ -326,7 +329,9 @@ export namespace controller {
           body: JSON.stringify(obj),
         })
           .then((res) => res.json())
-          .then((json) => {})
+          .then((json) => {
+            this.$FilerMessage.next(`upload file ${url}`);
+          })
           .finally(() => {
             callback?.();
           });
@@ -353,6 +358,7 @@ export namespace controller {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+        this.$FilerMessage.next(`export file`);
       }, 0);
     }
   }

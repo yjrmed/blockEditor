@@ -7,6 +7,7 @@ import { Aside } from "./component/right/aside";
 import { PopEditorWrap } from "./component/float/floatEditor";
 import { Snackbar, useSnackbar } from "./component/utils/snakbar";
 import { appEvents } from "./funcs/appEvents";
+import { Subscription } from "rxjs";
 
 export const FilerContext = createContext<controller.FileController>(
   new controller.FileController()
@@ -31,13 +32,20 @@ function App() {
       showSnackbar("initialization");
     }
 
-    const sbsc = filer.$PostChange.subscribe((res) => {
-      setPost(res);
-      if (res?.article) {
-        editor.SetArticle(res.article);
-        showSnackbar("load file");
-      }
-    });
+    const sbsc = new Subscription();
+    sbsc.add(
+      filer.$PostChange.subscribe((res) => {
+        setPost(res);
+        if (res?.article) {
+          editor.SetArticle(res.article);
+        }
+      })
+    );
+    sbsc.add(
+      filer.$FilerMessage.subscribe((res) => {
+        showSnackbar(res);
+      })
+    );
 
     return () => {
       sbsc.unsubscribe();
