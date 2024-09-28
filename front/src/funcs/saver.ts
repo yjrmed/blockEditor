@@ -30,6 +30,7 @@ export namespace saver {
 
     private observer: MutationObserver = new MutationObserver(
       (ml, observer) => {
+        console.log(ml);
         this.forward.length = 0;
         if (this.charging) {
           if (this.back.length) {
@@ -117,7 +118,8 @@ export namespace saver {
       try {
         const rec = this.back.pop();
         if (rec) {
-          rec.mrs.forEach((m) => {
+          const rrec = Array.from(rec.mrs).reverse();
+          rrec.forEach((m) => {
             this.backMutation(m);
           });
           const recs = this.observer.takeRecords();
@@ -163,27 +165,38 @@ export namespace saver {
           m.target.nodeValue = m.oldValue;
           break;
         case "attributes":
-          if (m.target instanceof HTMLElement) {
-            if (m.attributeName) {
-              if (m.oldValue) {
-                m.target.setAttribute(m.attributeName, m.oldValue);
-              } else {
-                m.target.removeAttribute(m.attributeName);
-              }
+          if (m.target instanceof HTMLElement && m.attributeName) {
+            if (m.oldValue) {
+              m.target.setAttribute(m.attributeName, m.oldValue);
+            } else {
+              m.target.removeAttribute(m.attributeName);
             }
           }
           break;
         case "childList":
-          if (m.addedNodes.length) {
+          if (m.addedNodes.length > 0) {
             m.addedNodes.forEach((node) => {
-              m.target.removeChild(node);
+              if (node.parentNode) {
+                node.parentNode.removeChild(node);
+              }
             });
           }
-          if (m.removedNodes.length) {
+
+          if (m.removedNodes.length > 0) {
             m.removedNodes.forEach((node) => {
-              m.target.insertBefore(node, m.nextSibling);
+              if (m.previousSibling) {
+                m.previousSibling?.parentNode?.insertBefore(
+                  node,
+                  m.previousSibling.nextSibling
+                );
+              } else if (m.nextSibling) {
+                m.nextSibling?.parentNode?.insertBefore(node, m.nextSibling);
+              } else {
+                m.target.appendChild(node);
+              }
             });
           }
+
           break;
       }
     }

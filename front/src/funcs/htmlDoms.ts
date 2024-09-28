@@ -1,6 +1,16 @@
+import { Node } from "typescript";
+
 export interface IDomItem {
   ele: HTMLElement;
   tagInfo: htmlTag.IHtmlTag;
+}
+
+export interface IOrderdSelection {
+  isCollapsed: boolean;
+  startNode: Node;
+  startOffset: number;
+  endNode: Node;
+  endOffset: number;
 }
 
 export namespace htmlTag {
@@ -487,13 +497,11 @@ export namespace htmlTag {
 
 export namespace domFuncs {
   export function StripTag(ele: HTMLElement) {
-    const parent = ele.parentNode;
-    if (parent) {
-      Array.from(ele.childNodes).forEach((node) => {
-        parent.insertBefore(node, ele);
-      });
-      parent.removeChild(ele);
-    }
+    const df = document.createDocumentFragment();
+    Array.from(ele.childNodes).forEach((node) => {
+      df.append(node.cloneNode(true));
+    });
+    ele.replaceWith(df);
   }
 
   export function SafeCloenEle(
@@ -512,51 +520,40 @@ export namespace domFuncs {
     return clone;
   }
 
-  export function SplitElement(
-    target: HTMLElement,
-    node: Node,
+  export function SplitHtmlElement(
+    target: HTMLElement | DocumentFragment,
+    node: Text,
     nodeOffset: number
-  ): HTMLElement {
-    let current = node;
-    let _current = document.createTextNode("");
-    current.parentElement?.insertBefore(_current, current);
-    if (node.textContent) {
-      const txt = node.textContent;
-      _current.textContent = txt.slice(0, nodeOffset);
-      current.textContent = txt.slice(nodeOffset);
-    }
-
-    let former: HTMLElement = target;
-
-    while (target.contains(current.parentElement)) {
-      const parent = current.parentElement as HTMLElement;
-      if (!parent.parentElement) {
-        break;
+  ): HTMLElement | DocumentFragment {
+    const ret = target.cloneNode() as HTMLElement | DocumentFragment;
+    ret.append(node.splitText(nodeOffset));
+    let current = node.parentElement;
+    while (current && target !== current) {
+      const _current = document.createElement(current.tagName);
+      _current.append(ret);
+      ret.append(_current);
+      while (current.nextSibling) {
+        ret.append(current.nextSibling);
       }
-      former = document.createElement(parent.tagName);
-      parent.parentElement.insertBefore(former, parent);
-      let ele = parent.firstChild;
-      while (ele && ele !== current) {
-        const _ele = ele?.nextSibling;
-        former.appendChild(ele);
-        ele = _ele;
-      }
-      current = parent;
+      current = current.parentElement;
     }
-    return former;
+    return ret;
   }
 
-  export function GetNodesArray(node: Node): Node[] {
-    const tw = document.createTreeWalker(node);
-    let crnt: Node | null = tw.currentNode;
-    const nodes: Node[] = [];
-    while (crnt) {
-      nodes.push(crnt);
-      crnt = tw.nextNode();
-    }
-    return nodes;
-  }
+  // export function GetNodesArray(node: Node): Node[] {
+  //   const tw = document.createTreeWalker(node);
+  //   let crnt: Node | null = tw.currentNode;
+  //   const nodes: Node[] = [];
+  //   while (crnt) {
+  //     nodes.push(crnt);
+  //     crnt = tw.nextNode();
+  //   }
+  //   return nodes;
+  // }
 
+
+
+  // tagname を引数で送り、それが見つかるまで探す。
   export function GetCommonAncestorElements(
     node1: Node,
     node2: Node
@@ -579,52 +576,49 @@ export namespace domFuncs {
     return ret;
   }
 
-  export function OptimizeInlineTag(ele: HTMLElement) {
-    const tw = document.createTreeWalker(ele, NodeFilter.SHOW_ELEMENT);
-    // remove child inline tag if same with parent
-    do {
-      const ele = tw.currentNode;
+  export function OptimizeInline(df: DocumentFragment) {
+    const tw = document.createTreeWalker(df, NodeFilter.SHOW_ELEMENT);
+
+    while (tw.nextNode()) {
+      const current = tw.currentNode;
       if (
-        ele instanceof HTMLElement &&
-        htmlTag.InlineNames.includes(ele.tagName)
+        current instanceof HTMLElement &&
+        htmlTag.InlineNames.includes(current.tagName) &&
+        !current.attributes.length
       ) {
-        if (!ele.attributes.length) {
-          Array.from(ele.children).forEach((ln) => {
-            if (
-              ln instanceof HTMLElement &&
-              ele.tagName === ln.tagName &&
-              !ln.attributes.length
-            ) {
-              StripTag(ln);
-            }
-          });
-        }
+        Array.from(current.children).forEach((child) => {
+          if (
+            child instanceof HTMLElement &&
+            child.tagName === current.tagName &&
+            !child.attributes.length
+          ) {
+            StripTag(child);
+          }
+        });
       }
-    } while (tw.nextNode());
+    }
 
-    tw.currentNode = ele;
+    tw.currentNode = df;
 
-    // Combine consecutive inline tags or text node
     do {
-      Array.from(ele.childNodes).reduce((pre, node) => {
+      const current = tw.currentNode;
+      Array.from(current.childNodes).reduce((pre, node) => {
         if (
           pre instanceof HTMLElement &&
           node instanceof HTMLElement &&
           pre.tagName === node.tagName &&
+          !pre.attributes.length &&
           !node.attributes.length
         ) {
-          // consecutive inline tags
           Array.from(node.childNodes).forEach((_node) => {
-            pre.appendChild(_node);
+            pre.append(_node);
           });
           node.remove();
           return pre;
         } else if (
-          // consecutive text node
           pre.nodeType === Node.TEXT_NODE &&
-          pre.textContent &&
           node.nodeType === Node.TEXT_NODE &&
-          node.textContent
+          pre.textContent
         ) {
           pre.textContent += node.textContent;
           node.remove();
@@ -633,7 +627,6 @@ export namespace domFuncs {
         return node;
       });
     } while (tw.nextNode());
-
-    return ele;
+    return df;
   }
 }

@@ -1,15 +1,7 @@
 import { Observable, fromEvent, switchMap } from "rxjs";
-import { htmlTag, IDomItem } from "./htmlDoms";
+import { htmlTag, IDomItem, IOrderdSelection } from "./htmlDoms";
 
 export namespace sele {
-  export interface ISelectionOrder {
-    isCollapsed: boolean;
-    startNode: Node;
-    startOffset: number;
-    endNode: Node;
-    endOffset: number;
-  }
-
   export interface ISelectionObj {
     block: IDomItem;
     Inline: IDomItem | null;
@@ -204,7 +196,7 @@ export namespace sele {
 
     public static GetSelectionOrder(
       sele: Selection
-    ): ISelectionOrder | undefined {
+    ): IOrderdSelection | undefined {
       if (sele.anchorNode && sele.focusNode) {
         const anchor = sele.anchorNode;
         const focus = sele.focusNode;
@@ -216,7 +208,7 @@ export namespace sele {
           startOffset: sele.anchorOffset,
           endNode: focus,
           endOffset: sele.focusOffset,
-        } as ISelectionOrder;
+        } as IOrderdSelection;
 
         if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
           // type range

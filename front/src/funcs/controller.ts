@@ -282,8 +282,12 @@ export namespace controller {
                 }
               : null;
 
-          this.$PostChange.next(this.post);
-          this.$FilerMessage.next("loaded file");
+          if (this.post) {
+            this.$PostChange.next(this.post);
+            this.$FilerMessage.next("loaded file");
+          } else {
+            this.$FilerMessage.next("Not found article");
+          }
           callback?.();
         })
         .catch((e) => {

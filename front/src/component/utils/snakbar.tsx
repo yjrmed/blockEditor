@@ -47,9 +47,12 @@ export const Snackbar = forwardRef<SnackbarHandles, {}>((_, ref) => {
 
   useEffect(() => {
     if (messages.length) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setMessages((prevItems) => prevItems.slice(1));
       }, messages[0].duration);
+      return () => {
+        clearTimeout(timer);
+      };
     }
   }, [messages]);
 

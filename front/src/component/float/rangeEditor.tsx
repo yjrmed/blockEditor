@@ -21,27 +21,19 @@ export const RangeEditor = (props: IRangeEditor) => {
   const toggleChk = (e: React.ChangeEvent<HTMLInputElement>) => {
     const cb = e.target as HTMLInputElement;
     const tagInfo = htmlTag.GetTagInfo(cb.value);
+
+    const range = props.sele.getRangeAt(0);
+    const ancestor = range.commonAncestorContainer;
+
     const order = sele.Selector.GetSelectionOrder(props.sele);
-    if (tagInfo && !tagInfo.noText && order && !order.isCollapsed) {
+    if (tagInfo && !tagInfo.noText && order && ancestor) {
       if (cb.checked) {
         editor.SaverCommand(() => {
-          cmdFunc.RangeCapTagCommand(
-            tagInfo.name,
-            order.startNode,
-            order.startOffset,
-            order.endNode,
-            order.endOffset
-          );
+          cmdFunc.RangeCapTagCommand(tagInfo.name, order, ancestor);
         }, `cap with ${tagInfo.name}`);
       } else {
         editor.SaverCommand(() => {
-          cmdFunc.RemoveRangeCapTagCommand(
-            tagInfo.name,
-            order.startNode,
-            order.startOffset,
-            order.endNode,
-            order.endOffset
-          );
+          cmdFunc.RemoveRangeCapTagCommand(tagInfo.name, order, ancestor);
         }, `Remove cap of ${tagInfo.name}`);
       }
     }

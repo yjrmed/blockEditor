@@ -1,74 +1,75 @@
-import { domFuncs, htmlTag } from "./htmlDoms";
+import { domFuncs, htmlTag, IOrderdSelection } from "./htmlDoms";
 
 export namespace cmdFunc {
   export function RangeCapTagCommand(
     tagName: string,
-    start: Node,
-    startOffset: number,
-    end: Node,
-    endOffset: number
-  ): HTMLElement {
-    const ancestors = domFuncs.GetCommonAncestorElements(start, end);
-    if (!ancestors.length) {
-      throw new Error("CapRangeTagCommand: not found ancestor");
+    oSele: IOrderdSelection,
+    ancestor: Node
+  ) {
+    if (oSele.isCollapsed) {
+      return;
     }
-    const commonAncestorElement = ancestors[0];
-    const tag = document.createElement(tagName);
-    Array.from(commonAncestorElement.childNodes).forEach((node) => {
-      tag.appendChild(node);
-    });
-    commonAncestorElement.innerHTML = "";
-    commonAncestorElement.appendChild(tag);
-    const former = domFuncs.SplitElement(tag, start, startOffset);
-    const ret = domFuncs.SplitElement(
-      tag,
-      end,
-      start === end ? endOffset - startOffset : endOffset
-    );
-    const latter = tag;
-    domFuncs.StripTag(former);
-    domFuncs.StripTag(latter);
-    domFuncs.OptimizeInlineTag(commonAncestorElement);
-    additionalInline(ret);
-    return ret;
-  }
 
-  function additionalInline(inline: HTMLElement) {
-    // if (inline.tagName === "RUBY") {
-    //   let temp = document.createElement("rp");
-    //   temp.textContent = "(";
-    //   inline.appendChild(temp);
-    //   temp = document.createElement("rt");
-    //   temp.textContent = "rt";
-    //   inline.appendChild(temp);
-    //   temp = document.createElement("rp");
-    //   temp.textContent = ")";
-    //   inline.appendChild(temp);
-    // }
+    const df = document.createDocumentFragment();
+    while (ancestor.firstChild) {
+      df.append(ancestor.firstChild);
+    }
+    const __df = domFuncs.SplitHtmlElement(
+      df,
+      oSele.endNode as unknown as Text,
+      oSele.endOffset
+    );
+    const _df = domFuncs.SplitHtmlElement(
+      df,
+      oSele.startNode as unknown as Text,
+      oSele.startOffset
+    );
+    const tag = document.createElement(tagName);
+    tag.append(_df);
+    df.append(tag);
+    df.append(__df);
+    domFuncs.OptimizeInline(df);
+    ancestor.appendChild(df);
   }
 
   export function RemoveRangeCapTagCommand(
     tagName: string,
-    start: Node,
-    startOffset: number,
-    end: Node,
-    endOffset: number
+    oSele: IOrderdSelection,
+    ancestor: Node
   ) {
-    const commonAncestorTag = domFuncs
-      .GetCommonAncestorElements(start, end)
-      .find((ancestor) => {
-        return ancestor.tagName === tagName;
-      });
-    if (!commonAncestorTag) {
+    if (oSele.isCollapsed) {
+      return;
+    }
+
+    let tar = ancestor as HTMLElement | null;
+    while (tar && tar.tagName !== tagName) {
+      tar = tar.parentElement;
+    }
+
+    if (!tar) {
       throw new Error(`not found common ${tagName} element`);
     }
-    domFuncs.SplitElement(commonAncestorTag, start, startOffset);
-    const middle = domFuncs.SplitElement(
-      commonAncestorTag,
-      end,
-      start === end ? endOffset - startOffset : endOffset
+
+    const originalParent = tar.parentElement;
+    const nextSibling = tar.nextSibling;
+    const df = document.createDocumentFragment();
+    df.append(tar);
+    const __df = domFuncs.SplitHtmlElement(
+      df,
+      oSele.endNode as unknown as Text,
+      oSele.endOffset
     );
-    domFuncs.StripTag(middle);
+    const _df = domFuncs.SplitHtmlElement(
+      df,
+      oSele.startNode as unknown as Text,
+      oSele.startOffset
+    );
+    domFuncs.StripTag(_df.firstChild as HTMLElement);
+    df.append(_df);
+    df.append(__df);
+    domFuncs.OptimizeInline(df);
+    originalParent?.insertBefore(df, nextSibling);
+    return;
   }
 
   export function CreateBlock(tagName: string): HTMLElement | undefined {
@@ -76,7 +77,6 @@ export namespace cmdFunc {
     if (!tagInfo) {
       return;
     }
-
     const ret = document.createElement(tagName);
     if (ret instanceof HTMLUListElement || ret instanceof HTMLOListElement) {
       const li = document.createElement("li");
@@ -87,7 +87,6 @@ export namespace cmdFunc {
       temp = document.createElement("dd");
       ret.appendChild(temp);
     }
-
     return ret;
   }
 }
